@@ -9,14 +9,21 @@ package SolutionOfSingleVariableEq;
  * @author jbao
  */
 public class FunctionModel {
-    
-    
+
+    public static final boolean DEBUG = true;
+
     public static double computeFunction(String functionName, double input, double[] equationParams) {
         if (functionName.equalsIgnoreCase("exponential")) {
             return expGrowth(input, equationParams);
-        } 
-        // if no function exists, return NaN
-        System.out.println("ERROR: specified function does not exist!");
+        }
+        if (functionName.equalsIgnoreCase("polynomial")) {
+            return polynomial(input, equationParams);
+        }
+        if (DEBUG) {
+            // if no function exists, return NaN
+            System.out.println("ERROR: specified function does not exist!");
+        }
+
         return Double.NaN;
     }
 
@@ -35,6 +42,14 @@ public class FunctionModel {
         // function calculation
         double result = n0 * Math.exp(lambda * t) + v / lambda * (Math.exp(lambda * t) - 1) + c0;
 
+        return result;
+    }
+
+    public static double polynomial(double x, double[] polyCoefs) {
+        double result = 0;
+        for (int i = 0; i < polyCoefs.length; i++) {
+            result += polyCoefs[i] * Math.pow(x, i);
+        }
         return result;
     }
 }

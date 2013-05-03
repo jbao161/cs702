@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 package SolutionOfSingleVariableEq;
-
+import Util.MathTools;
 /**
  *
  * @author jbao
@@ -12,15 +12,15 @@ public class BisectionMethod {
 
     public static final boolean DEBUG = true;
     // tolerance and max iterations
-    public static double TOL = 2e-30;
-    public static int maxIter = 10000;
+    public static double TOL = 10e-16;
+    public static int maxIter = 1000000;
 
     public static double bisect(String functionName, double lowGuess, double highGuess, double[] equationParams) {
         String[] convergenceMethods = {"Midpoint Ratio", "Half Range"};
         String convergenceMethod = convergenceMethods[1];
         double convergenceCriterion = Double.NaN;
 
-        double solution;
+        double solution = Double.NaN;
         double intervalBot = lowGuess;
         double intervalTop = highGuess;
 
@@ -88,13 +88,18 @@ public class BisectionMethod {
             if (functionMidpoint == 0 || (!Double.isNaN(convergenceCriterion) & convergenceCriterion < TOL)) {
                 //if (functionMidpoint == 0 || halfRange < TOL) {
                 solution = midpoint;// found a suitable solution
+                if (DEBUG) {
+                    double precision = Math.abs(intervalBot - intervalTop);
+                    System.out.println("solution: " + solution + " within an error of " + precision);
+                    System.out.println("f(" + solution + ") = " + FunctionModel.computeFunction(functionName, solution, equationParams));
+                }
                 return solution;
             }
             // step 5. increment iteration step
             i++;
             prevMidpoint = midpoint;
             // step 6. determine new location to search
-            if (functionBot * functionMidpoint > 0) {
+            if (MathTools.sign(functionBot) == MathTools.sign(functionMidpoint)) {
                 // use the right half of the original interval
                 intervalBot = midpoint;
                 functionBot = functionMidpoint;
@@ -119,11 +124,9 @@ public class BisectionMethod {
      * 7. if there are multiple solutions within the interval, the algorithm still works. it will output whichever solution it stumbles upon and won't know that other solutions exist
      */
     public static void main(String[] args) {
-        double[] eqParams = {34543, 1, 435000, -1564000};
-        double solution = bisect("exponential", -600, 600, eqParams);
-        System.out.println("solution: " + solution);
-        System.out.println("f(" + solution + ") = " + FunctionModel.computeFunction("exponential", solution, eqParams));
+        double[] eqParams = {-10, 0, 4, 1};
+        double solution = bisect("polynomial", 1, 2, eqParams);
 
-
+       
     }
 }
