@@ -9,11 +9,12 @@ package SolutionOfSingleVariableEq;
  * @author jbao
  */
 public class FunctionModel {
-
+    
+    
     public static double computeFunction(String functionName, double input, double[] equationParams) {
         if (functionName.equalsIgnoreCase("exponential")) {
             return expGrowth(input, equationParams);
-        }
+        } 
         // if no function exists, return NaN
         System.out.println("ERROR: specified function does not exist!");
         return Double.NaN;
@@ -22,7 +23,9 @@ public class FunctionModel {
     public static double expGrowth(double birthRate, double[] growthParams) {
         // input variable
         double lambda = birthRate;
-
+        if (lambda == 0) {
+            return Double.NaN; // divide by zero error
+        }
         // logistic growth parameters
         double n0 = growthParams[0];
         double t = growthParams[1];
