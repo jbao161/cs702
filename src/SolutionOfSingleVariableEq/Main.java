@@ -4,7 +4,7 @@
  */
 package SolutionOfSingleVariableEq;
 
-import EquationMethods.BisectionMethod;
+import EquationMethods.MethodBisection;
 import FunctionModel.FunctionModel;
 
 /**
@@ -19,7 +19,7 @@ public class Main {
                 return Math.sin(2 * x);
             }
         };
-        BisectionMethod b = new BisectionMethod();
+        MethodBisection b = new MethodBisection();
         b.TOL = 1e-5;
         b.maxIter = 1000;
         double solution = b.solve(eq, -1, 1, null);
