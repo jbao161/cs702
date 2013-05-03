@@ -14,14 +14,14 @@ public class BisectionMethod {
 
     public static final boolean DEBUG = true;
     // tolerance and max iterations
-    public static double TOL = 10e-16;
-    public static int maxIter = 1000000;
+    public static double TOL = 1e-5;
+    public static double maxIter = 1e3;
 
     public static double bisect(FunctionModel function, double lowGuess, double highGuess, double[] equationParams) {
         String[] convergenceMethods = {"Midpoint Ratio", "Half Range"};
-        String convergenceMethod = convergenceMethods[1];
+        String convergenceMethod = convergenceMethods[0];
         double convergenceCriterion = Double.NaN;
-
+        double precision = Double.NaN;
         double solution = Double.NaN;
         double intervalBot = lowGuess;
         double intervalTop = highGuess;
@@ -87,11 +87,13 @@ public class BisectionMethod {
             if (convergenceMethod.equals(convergenceMethods[1])) {
                 convergenceCriterion = halfRange;
             }
+            precision = Math.abs(intervalBot - intervalTop);
             if (functionMidpoint == 0 || (!Double.isNaN(convergenceCriterion) & convergenceCriterion < TOL)) {
                 //if (functionMidpoint == 0 || halfRange < TOL) {
                 solution = midpoint;// found a suitable solution
+
                 if (DEBUG) {
-                    double precision = Math.abs(intervalBot - intervalTop);
+                    System.out.println("after " + i + " iterations");
                     System.out.println("solution: " + solution + " within an error of " + precision);
                     System.out.println("f(" + solution + ") = " + function.computeFunction(solution, equationParams));
                 }
@@ -112,6 +114,7 @@ public class BisectionMethod {
         }
         // unsuccessful search
         System.out.println("Method failed after " + maxIter + " iterations");
+        System.out.println("inadequate solution: " + midpoint + " within an error of " + precision);
         return Double.NaN;
     }
 
@@ -125,11 +128,4 @@ public class BisectionMethod {
      * 6. if we wanted to allow f = constant instead of f = 0, we could simply use (functionBot - constant)* (functionMidpoint - constant) in step 6
      * 7. if there are multiple solutions within the interval, the algorithm still works. it will output whichever solution it stumbles upon and won't know that other solutions exist
      */
-    public static void main(String[] args) {
-        double[] eqParams = {-10, 0, 4, 1};
-
-        double solution = bisect(new ModelPolynomial(), 1, 2, eqParams);
-
-
-    }
 }

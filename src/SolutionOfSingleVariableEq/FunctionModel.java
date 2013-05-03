@@ -10,7 +10,6 @@ package SolutionOfSingleVariableEq;
  */
 public interface FunctionModel {
 
-    public double computeFunction( double input, double[] equationParams);
-    
+    public abstract double computeFunction(double input, double[] equationParams);
 
 }
