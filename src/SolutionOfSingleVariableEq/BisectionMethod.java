@@ -3,7 +3,9 @@
  * and open the template in the editor.
  */
 package SolutionOfSingleVariableEq;
+
 import Util.MathTools;
+
 /**
  *
  * @author jbao
@@ -15,7 +17,7 @@ public class BisectionMethod {
     public static double TOL = 10e-16;
     public static int maxIter = 1000000;
 
-    public static double bisect(String functionName, double lowGuess, double highGuess, double[] equationParams) {
+    public static double bisect(FunctionModel function, double lowGuess, double highGuess, double[] equationParams) {
         String[] convergenceMethods = {"Midpoint Ratio", "Half Range"};
         String convergenceMethod = convergenceMethods[1];
         double convergenceCriterion = Double.NaN;
@@ -30,8 +32,8 @@ public class BisectionMethod {
 
         // step 1. initialize comparison
         double functionMidpoint = Double.NaN;
-        double functionBot = FunctionModel.computeFunction(functionName, lowGuess, equationParams);
-        double functionTop = FunctionModel.computeFunction(functionName, highGuess, equationParams);
+        double functionBot = function.computeFunction(lowGuess, equationParams);
+        double functionTop = function.computeFunction(highGuess, equationParams);
 
         // some mild input checking
         boolean breakout = false;
@@ -60,7 +62,7 @@ public class BisectionMethod {
             // step 3. compute midpoint and f(midpoint)
             halfRange = (intervalTop - intervalBot) / 2;
             midpoint = intervalBot + halfRange;
-            functionMidpoint = FunctionModel.computeFunction(functionName, midpoint, equationParams);
+            functionMidpoint = function.computeFunction(midpoint, equationParams);
 
             // optional: check if there is a singularity at the midpoint
             boolean functionUndefined; // check if the function of the midpoint is undefined
@@ -74,7 +76,7 @@ public class BisectionMethod {
                 // try using 1/3 -of-the-way point, then 1/4, 1/5 etc
                 double splitPoint = intervalBot + (intervalTop - intervalBot) / j;
                 // check to see if the new value is valid
-                functionMidpoint = FunctionModel.computeFunction(functionName, splitPoint, equationParams);
+                functionMidpoint = function.computeFunction(splitPoint, equationParams);
                 functionUndefined = Double.isNaN(functionMidpoint) || Double.isInfinite(functionMidpoint);
             }
 
@@ -91,7 +93,7 @@ public class BisectionMethod {
                 if (DEBUG) {
                     double precision = Math.abs(intervalBot - intervalTop);
                     System.out.println("solution: " + solution + " within an error of " + precision);
-                    System.out.println("f(" + solution + ") = " + FunctionModel.computeFunction(functionName, solution, equationParams));
+                    System.out.println("f(" + solution + ") = " + function.computeFunction(solution, equationParams));
                 }
                 return solution;
             }
@@ -125,8 +127,9 @@ public class BisectionMethod {
      */
     public static void main(String[] args) {
         double[] eqParams = {-10, 0, 4, 1};
-        double solution = bisect("polynomial", 1, 2, eqParams);
 
-       
+        double solution = bisect(new ModelPolynomial(), 1, 2, eqParams);
+
+
     }
 }
