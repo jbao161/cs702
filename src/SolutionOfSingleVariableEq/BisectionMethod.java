@@ -89,8 +89,7 @@ public class BisectionMethod {
         System.out.println("Method failed after " + maxIter + " iterations");
         return Double.NaN;
     }
-// comments: 1. step 5 is included in the body to be consistent the textbook for academic purposes only. otherwise it can go in the 'for' statment.
-// 2. the input checking doesn't prevent problems that occur when the f() is high yet not quite infinite.
+// comments: 1. "step 5. increment iteration step" is included in the body to be consistent the textbook for academic purposes only. otherwise it can go in the 'for' statment.
 
     /**
      * @param args the command line arguments
