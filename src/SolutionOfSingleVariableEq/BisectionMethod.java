@@ -23,19 +23,18 @@ public class BisectionMethod {
 
         double halfRange = Double.NaN;
         double midpoint = Double.NaN;
-        double functionMidpoint = Double.NaN;
 
         // step 1. initialize comparison
+        double functionMidpoint = Double.NaN;
         double functionBot = FunctionModel.computeFunction(functionName, lowGuess, equationParams);
         double functionTop = FunctionModel.computeFunction(functionName, highGuess, equationParams);
 
+        // some mild input checking
+        boolean breakout = false;
         if (DEBUG) {
             System.out.println("f(low guess) = " + functionBot);
             System.out.println("f(high guess) = " + functionTop);
         }
-
-        // some mild input checking
-        boolean breakout = false;
         if (Double.isInfinite(functionBot) || Double.isNaN(functionBot)) {
             System.out.println("Invalid Input: " + functionBot + ". f(low guess) is not a valid number!");
             breakout = true;
@@ -48,7 +47,6 @@ public class BisectionMethod {
             System.out.println("Invalid Inputs: " + functionBot + ", " + functionTop + "f(low guess) and f(high guess) must have opposite sign!");
             breakout = true;
         }
-
         if (breakout) {
             return Double.NaN;
         }
@@ -59,15 +57,23 @@ public class BisectionMethod {
             halfRange = (intervalTop - intervalBot) / 2;
             midpoint = intervalBot + halfRange;
             functionMidpoint = FunctionModel.computeFunction(functionName, midpoint, equationParams);
-            // optional: if there is a singularity at the midpoint, try to find a different point to split the interval into
-            for (int j = 3; (Double.isNaN(functionMidpoint) || Double.isInfinite(functionMidpoint)); j++) {
-                // if 1/2 point is invalid, try using 1/3 point, then 1/4 point, 1/5 etc until point is valid or until 1/j approaches zero.
-                functionMidpoint = FunctionModel.computeFunction(functionName, intervalBot + (intervalTop - intervalBot) / j, equationParams);
-                if (j > 1e100) {
-                    System.out.println("Error: the function may be undefined in the interval specified because a suitable midpoint could not be found");
+
+            // optional: check if there is a singularity at the midpoint
+            boolean functionUndefined; // check if the function of the midpoint is undefined
+            functionUndefined = Double.isNaN(functionMidpoint) || Double.isInfinite(functionMidpoint);
+            // while the function of the point at which the interval splits is undefined, try to use a different point
+            for (int j = 3; functionUndefined; j++) {
+                if (j > 100) { // give up if a valid point cannot be found after some reasonable number of tries
+                    System.out.println("Error: a suitable midpoint could not be found. The function may be undefined in the interval specified. ");
                     return Double.NaN;
                 }
+                // try using 1/3 -of-the-way point, then 1/4, 1/5 etc
+                double splitPoint = intervalBot + (intervalTop - intervalBot) / j;
+                // check to see if the new value is valid
+                functionMidpoint = FunctionModel.computeFunction(functionName, splitPoint, equationParams);
+                functionUndefined = Double.isNaN(functionMidpoint) || Double.isInfinite(functionMidpoint);
             }
+
             // step 4. evaluate accuracy of midpoint
             if (functionMidpoint == 0 || halfRange < TOL) {
                 solution = midpoint;// found a suitable solution
