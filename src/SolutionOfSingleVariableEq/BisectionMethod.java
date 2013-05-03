@@ -16,6 +16,9 @@ public class BisectionMethod {
     public static int maxIter = 10000;
 
     public static double bisect(String functionName, double lowGuess, double highGuess, double[] equationParams) {
+        String[] convergenceMethods = {"Midpoint Ratio", "Half Range"};
+        String convergenceMethod = convergenceMethods[1];
+        double convergenceCriterion = Double.NaN;
 
         double solution;
         double intervalBot = lowGuess;
@@ -23,6 +26,7 @@ public class BisectionMethod {
 
         double halfRange = Double.NaN;
         double midpoint = Double.NaN;
+        double prevMidpoint = midpoint;
 
         // step 1. initialize comparison
         double functionMidpoint = Double.NaN;
@@ -75,12 +79,20 @@ public class BisectionMethod {
             }
 
             // step 4. evaluate accuracy of midpoint
-            if (functionMidpoint == 0 || halfRange < TOL) {
+            if (convergenceMethod.equals(convergenceMethods[0])) {
+                convergenceCriterion = Math.abs(midpoint - prevMidpoint) / Math.abs(midpoint);
+            }
+            if (convergenceMethod.equals(convergenceMethods[1])) {
+                convergenceCriterion = halfRange;
+            }
+            if (functionMidpoint == 0 || (!Double.isNaN(convergenceCriterion) & convergenceCriterion < TOL)) {
+                //if (functionMidpoint == 0 || halfRange < TOL) {
                 solution = midpoint;// found a suitable solution
                 return solution;
             }
             // step 5. increment iteration step
             i++;
+            prevMidpoint = midpoint;
             // step 6. determine new location to search
             if (functionBot * functionMidpoint > 0) {
                 // use the right half of the original interval
@@ -95,7 +107,7 @@ public class BisectionMethod {
         System.out.println("Method failed after " + maxIter + " iterations");
         return Double.NaN;
     }
-    
+
     /*
      * comments: 
      * 1. "step 5. increment iteration step" is included in the body to be consistent the textbook for academic purposes only. otherwise it can go in the 'for' statment.
@@ -105,8 +117,7 @@ public class BisectionMethod {
      * 5. it doesn't really matter where we split the interval, we use the midpoint in the hope that halving the interval will find a solution the fastest, but the algorithm works for any point in the interval
      * 6. if we wanted to allow f = constant instead of f = 0, we could simply use (functionBot - constant)* (functionMidpoint - constant) in step 6
      * 7. if there are multiple solutions within the interval, the algorithm still works. it will output whichever solution it stumbles upon and won't know that other solutions exist
-     */ 
-
+     */
     public static void main(String[] args) {
         double[] eqParams = {34543, 1, 435000, -1564000};
         double solution = bisect("exponential", -600, 600, eqParams);
