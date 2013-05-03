@@ -95,11 +95,17 @@ public class BisectionMethod {
         System.out.println("Method failed after " + maxIter + " iterations");
         return Double.NaN;
     }
-// comments: 1. "step 5. increment iteration step" is included in the body to be consistent the textbook for academic purposes only. otherwise it can go in the 'for' statment.
+    
+    /*
+     * comments: 
+     * 1. "step 5. increment iteration step" is included in the body to be consistent the textbook for academic purposes only. otherwise it can go in the 'for' statment.
+     * 2. this is basically an application of the mean value theorem using some continuous function and exploiting the fact that a solution to f = 0 will exist between a and b, provided that f(a) < 0 and f(b) > 0 both exist.
+     * 3. we need to solve f=0, because the algorithm relies on positive/negative sign checking in step 6 to determine which interval contains the solution
+     * 4. we need to maintain the lower bound of the interval to map to a negative and the upper bound of the interval to map to a positive to ensure a zero exists within the interval
+     * 5. it doesn't really matter where we split the interval, we use the midpoint in the hope that halving the interval will find a solution the fastest, but the algorithm works for any point in the interval
+     * 6. if we wanted to allow f = constant instead of f = 0, we could simply use (functionBot - constant)* (functionMidpoint - constant) in step 6
+     */ 
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         double[] eqParams = {34543, 1, 435000, -1564000};
         double solution = bisect("exponential", -600, 600, eqParams);
