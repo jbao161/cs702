@@ -2,22 +2,20 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package SolutionOfSingleVariableEq;
+package EquationMethods;
 
+import FunctionModel.FunctionModel;
 import Util.MathTools;
 
 /**
  *
  * @author jbao
  */
-public class BisectionMethod {
+public class BisectionMethod extends EquationMethod{
 
     public static final boolean DEBUG = true;
-    // tolerance and max iterations
-    public static double TOL = 1e-5;
-    public static double maxIter = 1e3;
 
-    public static double bisect(FunctionModel function, double lowGuess, double highGuess, double[] equationParams) {
+    public double solve(FunctionModel function, double lowGuess, double highGuess, double[] equationParams) {
         String[] convergenceMethods = {"Midpoint Ratio", "Half Range"};
         String convergenceMethod = convergenceMethods[0];
         double convergenceCriterion = Double.NaN;
@@ -49,7 +47,7 @@ public class BisectionMethod {
             System.out.println("Invalid Input: " + functionTop + ". f(high guess) is not a valid number!");
             breakout = true;
         }
-        if (functionBot * functionTop > 0) {
+        if (functionBot * functionTop >= 0) {
             System.out.println("Invalid Inputs: " + functionBot + ", " + functionTop + "f(low guess) and f(high guess) must have opposite sign!");
             breakout = true;
         }
@@ -89,12 +87,12 @@ public class BisectionMethod {
             }
             precision = Math.abs(intervalBot - intervalTop);
             if (functionMidpoint == 0 || (!Double.isNaN(convergenceCriterion) & convergenceCriterion < TOL)) {
-                //if (functionMidpoint == 0 || halfRange < TOL) {
+
                 solution = midpoint;// found a suitable solution
 
                 if (DEBUG) {
-                    System.out.println("after " + i + " iterations");
-                    System.out.println("solution: " + solution + " within an error of " + precision);
+                    System.out.println("after " + (i + 1) + " iterations");
+                    System.out.println("solution: " + solution + " within an interval of length " + precision);
                     System.out.println("f(" + solution + ") = " + function.computeFunction(solution, equationParams));
                 }
                 return solution;
@@ -113,8 +111,8 @@ public class BisectionMethod {
             }
         }
         // unsuccessful search
-        System.out.println("Method failed after " + maxIter + " iterations");
-        System.out.println("inadequate solution: " + midpoint + " within an error of " + precision);
+        System.out.println("Method failed after " + (maxIter - 1) + " iterations");
+        System.out.println("inadequate solution: " + midpoint + " within an interval of length " + precision);
         return Double.NaN;
     }
 
@@ -127,5 +125,6 @@ public class BisectionMethod {
      * 5. it doesn't really matter where we split the interval, we use the midpoint in the hope that halving the interval will find a solution the fastest, but the algorithm works for any point in the interval
      * 6. if we wanted to allow f = constant instead of f = 0, we could simply use (functionBot - constant)* (functionMidpoint - constant) in step 6
      * 7. if there are multiple solutions within the interval, the algorithm still works. it will output whichever solution it stumbles upon and won't know that other solutions exist
+     * 8. if you find the solution in one iteration, the reported error interval will be equal to the distance between the two guesses you provided. That error interval is too large and can be misleading. However, you cannot be sure of the true margin of error, because f() might not be exactly zero due to truncation errors within the function computation.
      */
 }
