@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package EquationMethods;
+package SolverMethods;
 
 import FunctionModel.FunctionModel;
 import Util.MathTools;
@@ -11,11 +11,19 @@ import Util.MathTools;
  *
  * @author jbao
  */
-public class MethodBisection extends EquationMethod {
+public class MethodBisection extends SolverMethod {
 
     public static final boolean DEBUG = true;
 
-    public double solve(FunctionModel function, double lowGuess, double highGuess, double[] equationParams) {
+    @Override
+    public double solve(Object[] args) {
+
+        FunctionModel function = (FunctionModel) args[0];
+        double[] intialGuesses = (double[]) args[1];
+        double lowGuess = intialGuesses[0];
+        double highGuess = intialGuesses[1];
+        double[] equationParams = (double[]) args[2];
+
         String[] convergenceMethods = {"Midpoint Ratio", "Half Range"};
         String convergenceMethod = convergenceMethods[0];
         double convergenceCriterion = Double.NaN;
@@ -30,8 +38,8 @@ public class MethodBisection extends EquationMethod {
 
         // step 1. initialize comparison
         double functionMidpoint = Double.NaN;
-        double functionBot = function.computeFunction(lowGuess, equationParams);
-        double functionTop = function.computeFunction(highGuess, equationParams);
+        double functionBot = function.compute(lowGuess, equationParams);
+        double functionTop = function.compute(highGuess, equationParams);
 
         // some mild input checking
         boolean breakout = false;
@@ -60,7 +68,7 @@ public class MethodBisection extends EquationMethod {
             // step 3. compute midpoint and f(midpoint)
             halfRange = (intervalTop - intervalBot) / 2;
             midpoint = intervalBot + halfRange;
-            functionMidpoint = function.computeFunction(midpoint, equationParams);
+            functionMidpoint = function.compute(midpoint, equationParams);
 
             // optional: check if there is a singularity at the midpoint
             boolean functionUndefined; // check if the function of the midpoint is undefined
@@ -74,7 +82,7 @@ public class MethodBisection extends EquationMethod {
                 // try using 1/3 -of-the-way point, then 1/4, 1/5 etc
                 double splitPoint = intervalBot + (intervalTop - intervalBot) / j;
                 // check to see if the new value is valid
-                functionMidpoint = function.computeFunction(splitPoint, equationParams);
+                functionMidpoint = function.compute(splitPoint, equationParams);
                 functionUndefined = Double.isNaN(functionMidpoint) || Double.isInfinite(functionMidpoint);
             }
 
@@ -93,7 +101,7 @@ public class MethodBisection extends EquationMethod {
                 if (DEBUG) {
                     System.out.println("after " + (i + 1) + " iterations");
                     System.out.println("solution: " + solution + " within an interval of length " + precision);
-                    System.out.println("f(" + solution + ") = " + function.computeFunction(solution, equationParams));
+                    System.out.println("f(" + solution + ") = " + function.compute(solution, equationParams));
                 }
                 return solution;
             }
@@ -112,7 +120,7 @@ public class MethodBisection extends EquationMethod {
         }
         // unsuccessful search
         if (DEBUG) {
-            System.out.println("Method failed after " + (maxIter - 1) + " iterations");
+            System.out.println("Method failed after " + maxIter + " iterations");
             System.out.println("inadequate solution: " + midpoint + " within an interval of length " + precision);
         }
         return Double.NaN;

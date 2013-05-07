@@ -4,8 +4,8 @@
  */
 package SolutionOfSingleVariableEq;
 
-import EquationMethods.MethodBisection;
-import FunctionModel.FunctionModel;
+import SolverMethods.*;
+import FunctionModel.*;
 
 /**
  *
@@ -14,16 +14,40 @@ import FunctionModel.FunctionModel;
 public class Main {
 
     public static void main(String[] args) {
-        FunctionModel eq = new FunctionModel() {
-            public double computeFunction(double x, double[] p) {
-                return Math.sin(2 * x);
+        // iteration method
+        MethodBisection bisect = new MethodBisection();
+        MethodFixedPoint fixed = new MethodFixedPoint();
+        MethodNewton newton = new MethodNewton();
+        MethodSecant secant = new MethodSecant();
+        MethodFalsePosition falseposition = new MethodFalsePosition();
+
+        // default functions
+        ModelPolynomial poly = new ModelPolynomial();
+
+/// assign your variables here!
+        // custom defined function (optional)
+        FunctionModel custom = new FunctionModel() {
+            public double compute(double x, double[] p) {
+                return Math.cos(x);
+            }
+
+            public double dcompute(double x, double[] equationParams) {
+                return -Math.sin(x);
             }
         };
-        MethodBisection b = new MethodBisection();
-        b.TOL = 1e-5;
-        b.maxIter = 1000;
-        double solution = b.solve(eq, -1, 1, null);
-
-
+        //the search method, function, intial guess, and parameters here:
+        SolverMethod solver = falseposition;
+        FunctionModel function = custom;
+        double[] functionParams = {0, 3, 4, -4};
+        double[] initialGuess = {0, -2};
+        // convergence criterion
+        solver.TOL = 1e-8;
+        solver.maxIter = 10e8;
+///
+        // solution
+        double solution;
+        Object[] solveInputs = {function, initialGuess, functionParams};
+        //solution = solver.solve(solveInputs);
+        solution = falseposition.solve(new Object[]{function, initialGuess, functionParams});
     }
 }

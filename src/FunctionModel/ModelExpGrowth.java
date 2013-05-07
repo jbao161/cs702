@@ -10,7 +10,7 @@ package FunctionModel;
  */
 public class ModelExpGrowth implements FunctionModel {
 
-    public double computeFunction(double birthRate, double[] growthParams) {
+    public double compute(double birthRate, double[] growthParams) {
         // input variable
         double lambda = birthRate;
         if (lambda == 0) {
@@ -26,5 +26,9 @@ public class ModelExpGrowth implements FunctionModel {
         double result = n0 * Math.exp(lambda * t) + v / lambda * (Math.exp(lambda * t) - 1) + c0;
 
         return result;
+    }
+
+    public double dcompute(double input, double[] equationParams) {
+        return Double.NaN;
     }
 }
