@@ -18,6 +18,7 @@ public class Main {
         MethodBisection bisect = new MethodBisection();
         MethodFixedPoint fixed = new MethodFixedPoint();
         MethodNewton newton = new MethodNewton();
+        MethodNetownModified newton2 = new MethodNetownModified();
         MethodSecant secant = new MethodSecant();
         MethodFalsePosition falseposition = new MethodFalsePosition();
 
@@ -36,10 +37,10 @@ public class Main {
             }
         };
         //the search method, function, intial guess, and parameters here:
-        SolverMethod solver = falseposition;
-        FunctionModel function = custom;
-        double[] functionParams = {0, 3, 4, -4};
-        double[] initialGuess = {0, -2};
+        SolverMethod solver = newton;
+        FunctionModel function = poly;
+        double[] functionParams = {-10, 0, 4, 1};
+        double[] initialGuess = {0, 2};
         // convergence criterion
         solver.TOL = 1e-8;
         solver.maxIter = 10e8;

@@ -10,7 +10,7 @@ import FunctionModel.FunctionModel;
  *
  * @author jbao
  */
-public class MethodNetwonModified extends SolverMethod {
+public class MethodNetownModified extends SolverMethod {
 
     public static final boolean DEBUG = true;
 

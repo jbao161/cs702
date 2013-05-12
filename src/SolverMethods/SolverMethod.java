@@ -4,8 +4,6 @@
  */
 package SolverMethods;
 
-import FunctionModel.FunctionModel;
-
 /**
  *
  * @author jbao
