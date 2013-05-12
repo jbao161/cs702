@@ -10,7 +10,7 @@ import java.lang.ArithmeticException;
  *
  * @author jbao
  */
-public class MathTools {
+public class Math {
 
     public static int sign(double value) {
         if (Double.isNaN(value)) {
