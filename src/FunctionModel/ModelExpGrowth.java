@@ -28,7 +28,7 @@ public class ModelExpGrowth implements FunctionModel {
         return result;
     }
 
-    public double dcompute(double input, double[] equationParams) {
+    public double dcompute(int derivative,double input, double[] equationParams) {
         return Double.NaN;
     }
 }

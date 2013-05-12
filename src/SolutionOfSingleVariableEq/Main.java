@@ -31,7 +31,7 @@ public class Main {
                 return Math.cos(x);
             }
 
-            public double dcompute(double x, double[] equationParams) {
+            public double dcompute(int deriv, double x, double[] equationParams) {
                 return -Math.sin(x);
             }
         };

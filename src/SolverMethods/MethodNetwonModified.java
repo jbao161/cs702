@@ -10,7 +10,7 @@ import FunctionModel.FunctionModel;
  *
  * @author jbao
  */
-public class MethodNewton extends SolverMethod {
+public class MethodNetwonModified extends SolverMethod {
 
     public static final boolean DEBUG = true;
 
@@ -26,6 +26,8 @@ public class MethodNewton extends SolverMethod {
         double fx = Double.NaN;
         double convergenceCriterion = Double.NaN;
         double derivative = Double.NaN;
+        double modifiedTerm = Double.NaN;
+        double fd2 = Double.NaN;
 
         for (int i = 0; i <= maxIter; i++) { // i<= maxIter because results of nth iteration are not checked until the n+1th
             fx = function.compute(initialGuess, equationParams);
@@ -44,7 +46,9 @@ public class MethodNewton extends SolverMethod {
                 }
                 return Double.NaN;
             }
-            nextGuess = initialGuess - fx / derivative;
+            fd2 = function.dcompute(2,initialGuess, equationParams); 
+            modifiedTerm =Math.pow(derivative,2)-fx*fd2;
+            nextGuess = initialGuess - fx *derivative/modifiedTerm;
             convergenceCriterion = Math.abs(nextGuess - initialGuess) / Math.abs(nextGuess);
             initialGuess = nextGuess;
 

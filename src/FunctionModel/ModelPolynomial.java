@@ -20,10 +20,10 @@ public class ModelPolynomial implements FunctionModel {
     }
 
     @Override
-    public double dcompute(double x, double[] polyCoefs) {
+    public double dcompute(int derivative, double x, double[] polyCoefs) {
         double result = 0;
-        for (int i = 1; i < polyCoefs.length; i++) {
-            result += polyCoefs[i] * Math.pow(x, i - 1);
+        for (int i = 0; i < polyCoefs.length; i++) {
+            result += polyCoefs[i] * Util.MathTools.factorial(i) * Math.pow(x, Math.max(0, i - derivative));
         }
         return result;
     }
