@@ -99,6 +99,14 @@ public class Polynomial extends TreeMap<Double, Double> {
         return result;
     }
 
+    public Polynomial times(double constant) {
+        Polynomial result = new Polynomial();
+        for (Map.Entry<Double, Double> e : this.entrySet()) {
+            result.put(e.getKey(), Double.valueOf(e.getValue() * constant));
+        }
+        return result;
+    }
+
     public double[][] toPrimitive() {
 
         Double[][] objResult = this.entrySet().toArray(new Double[this.entrySet().size()][]);
@@ -117,12 +125,12 @@ public class Polynomial extends TreeMap<Double, Double> {
         String subtract = " - ";
         String var = "x";
         String exp = "^";
-        String operator;
+        String operator = add;
         for (Map.Entry<Double, Double> e : this.entrySet()) {
             double coef = e.getValue();
             double exponent = e.getKey();
             // if the coefficient is negative, and the term is not a constant, use subtract String and positive coefficient
-            if (coef < 0 & exponent!=0) {
+            if (coef < 0 & exponent != 0) {
                 operator = subtract;
                 coef = -coef;
             } else {
@@ -141,13 +149,18 @@ public class Polynomial extends TreeMap<Double, Double> {
                     result += var;
                 }
                 // if the term is not a constant and its exponent is not one, we need to show the exponent
-                if (exponent !=0 & exponent != 1) {
-                    result += exp + e.getKey();
+                if (exponent != 0 & exponent != 1) {
+                    result += exp + exponent;
                 }
             }
         }
         // removes the leading add string
-        result = result.substring(add.length());
+        if (result.length() > operator.length()) {
+            result = result.substring(operator.length());
+        }
         return result;
+    }
+    public void print(){
+        System.out.println(this.toText());
     }
 }
