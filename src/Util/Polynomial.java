@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package LagrangeInterpolation;
+package Util;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -120,10 +120,13 @@ public class Polynomial extends TreeMap<Double, Double> {
     }
 
     public String toText() {
+        return toText("x");
+    }
+
+    public String toText(String varName) {
         String result = "";
         String add = " + ";
         String subtract = " - ";
-        String var = "x";
         String exp = "^";
         String operator = add;
         for (Map.Entry<Double, Double> e : this.entrySet()) {
@@ -146,7 +149,7 @@ public class Polynomial extends TreeMap<Double, Double> {
                 }
                 // print the variable name if term is not a constant
                 if (exponent != 0) {
-                    result += var;
+                    result += varName;
                 }
                 // if the term is not a constant and its exponent is not one, we need to show the exponent
                 if (exponent != 0 & exponent != 1) {
@@ -160,7 +163,12 @@ public class Polynomial extends TreeMap<Double, Double> {
         }
         return result;
     }
-    public void print(){
-        System.out.println(this.toText());
+
+    public void print(String varName) {
+        System.out.println(this.toText(varName));
+    }
+
+    public void print() {
+        System.out.println(this.toText("x"));
     }
 }

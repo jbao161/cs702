@@ -8,6 +8,7 @@ package LagrangeInterpolation;
  *
  * @author jbao
  */
+import Util.Polynomial;
 import java.awt.Color;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;

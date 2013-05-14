@@ -4,6 +4,8 @@
  */
 package LagrangeInterpolation;
 
+import Util.Polynomial;
+
 /**
  * a two term grouping of the form (x-a)
  *

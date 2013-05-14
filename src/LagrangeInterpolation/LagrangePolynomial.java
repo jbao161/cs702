@@ -4,6 +4,7 @@
  */
 package LagrangeInterpolation;
 
+import Util.Polynomial;
 import FunctionModel.FunctionModel;
 
 /**
@@ -45,4 +46,8 @@ public class LagrangePolynomial {
         }
         return result;
     }
+    /* comments:
+     * 1. each x value must be distinct; there cannot be replicate entries in the data because of divide by zero error. can be modified to screen out replicate pairs, but then there is a loss of terms which I don't know whether will affect the outcome of the polynomial. seems it would be okay, may need to account for the end power of the polynomial. 
+     * 2. the error term = f(n+1 th derivative) (x0)/ (n+1)! * Product(i=0 to n)(x-xi), where n+1 is the number of points
+     */
 }

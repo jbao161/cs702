@@ -42,7 +42,8 @@ public class MathTools {
         }
         return result;
     }
-        public static double max(double[][] data) {
+
+    public static double max(double[][] data) {
         double result = Double.MIN_VALUE;
         for (int i = 0; i < data.length; i++) {
             if (data[i][0] > result) {
@@ -51,12 +52,19 @@ public class MathTools {
         }
         return result;
     }
-         public static double logBase(double base, double number) {
+
+    public static double logBase(double base, double number) {
         if (base == 0) {
             return number;
         } else {
             double result = Math.log(number) / Math.log(base);
             return result;
         }
+    }
+
+    public static double binomial(int n, int k) {
+        double numerator = factorial(n);
+        double denom = factorial(k) * factorial(n - k);
+        return numerator / denom;
     }
 }

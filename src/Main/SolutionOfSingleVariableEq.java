@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package SolutionOfSingleVariableEq;
+package Main;
 
 import SolverMethods.*;
 import FunctionModel.*;
@@ -11,7 +11,7 @@ import FunctionModel.*;
  *
  * @author jbao
  */
-public class Main {
+public class SolutionOfSingleVariableEq {
 
     public static void main(String[] args) {
         // iteration method

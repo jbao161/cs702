@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package SolutionOfSingleVariableEq;
+package Main;
 
 import LagrangeInterpolation.LagrangePlot;
-import LagrangeInterpolation.Polynomial;
+import Util.Polynomial;
 import javax.swing.JFrame;
 import org.jfree.ui.ApplicationFrame;
 
