@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Util;
+package LagrangeInterpolation;
 
 import FunctionModel.FunctionModel;
 
@@ -12,7 +12,7 @@ import FunctionModel.FunctionModel;
  */
 public class LagrangePolynomial {
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public static Polynomial interpolate(double[][] data) {
         Polynomial singleTerm = null;

@@ -32,4 +32,31 @@ public class MathTools {
         }
         return result;
     }
+
+    public static double min(double[][] data) {
+        double result = Double.MAX_VALUE;
+        for (int i = 0; i < data.length; i++) {
+            if (data[i][0] < result) {
+                result = data[i][0];
+            }
+        }
+        return result;
+    }
+        public static double max(double[][] data) {
+        double result = Double.MIN_VALUE;
+        for (int i = 0; i < data.length; i++) {
+            if (data[i][0] > result) {
+                result = data[i][0];
+            }
+        }
+        return result;
+    }
+         public static double logBase(double base, double number) {
+        if (base == 0) {
+            return number;
+        } else {
+            double result = Math.log(number) / Math.log(base);
+            return result;
+        }
+    }
 }

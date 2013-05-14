@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Util;
+package LagrangeInterpolation;
 
 /**
  * assumes numbers are either constants, or variables of the same type x
