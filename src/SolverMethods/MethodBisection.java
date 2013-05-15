@@ -5,7 +5,7 @@
 package SolverMethods;
 
 import FunctionModel.FunctionModel;
-import Util.MathTools;
+import NumUtil.MathTools;
 
 /**
  *

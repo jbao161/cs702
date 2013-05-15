@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Util;
+package NumUtil;
 
-import Util.Polynomial;
+import NumUtil.Polynomial;
 
 /**
  * assumes numbers are either constants, or variables of the same type x

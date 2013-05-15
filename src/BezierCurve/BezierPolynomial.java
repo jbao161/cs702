@@ -4,13 +4,13 @@
  */
 package BezierCurve;
 
-import Util.Polynomial;
+import NumUtil.Polynomial;
 
 /**
  *
  * @author jbao
  */
-public class BezierPolynomial extends Util.Polynomial {
+public class BezierPolynomial extends NumUtil.Polynomial {
 
     public BezierPolynomial(double[] controlCoordinates) {
         Polynomial result = new Polynomial();

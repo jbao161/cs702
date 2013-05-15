@@ -2,9 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Util;
+package NumUtil;
 
 import java.lang.ArithmeticException;
+import java.util.Arrays;
 
 /**
  *
@@ -85,22 +86,22 @@ public class MathTools {
     }
 
     /**
-     * converts a list of multidimensional points into a list of coordinates grouped by their dimension
-     * @param listOfDimensionalPoints input format: {p1,p2, ...}
-     * for points p1 = {x1,y1,..}, p2 = {x2,y2,..}
-     * @return same dimension coordinates are grouped into arrays {{x1,x2,...},{y1,y2,...},...}
+     * converts a list of multidimensional points into a list of coordinates
+     * grouped by their dimension. (its just a matrix transpose)
+     *
+     * @param listOfDimensionalPoints input format: {p1,p2, ...} for points p1 =
+     * {x1,y1,..}, p2 = {x2,y2,..}
+     * @return same dimension coordinates are grouped into arrays
+     * {{x1,x2,...},{y1,y2,...},...}
      */
     public static double[][] pointToCoordinateArray(double[][] listOfDimensionalPoints) {
         int numOfPoints = listOfDimensionalPoints.length;
         int numOfDimensions = listOfDimensionalPoints[0].length; // must all be same dimensions!
-        double[][] result = new double[numOfDimensions][];
-        double[] coordinateArray;
+        double[][] result = new double[numOfDimensions][numOfPoints];
         for (int i = 0; i < numOfDimensions; i++) {
-            coordinateArray = new double[numOfPoints];
             for (int j = 0; j < numOfPoints; j++) {
-                coordinateArray[j] = listOfDimensionalPoints[i][j];
+                result[i][j] = listOfDimensionalPoints[j][i];
             }
-            result[i] = coordinateArray;
         }
         return result;
     }

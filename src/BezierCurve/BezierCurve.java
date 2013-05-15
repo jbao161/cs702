@@ -25,14 +25,14 @@ public class BezierCurve extends ArrayList<BezierPolynomial> {
 
     /**
      *
-     * @param controlPoints input format: {p1,p2, ...}
-     * for control points p1 = {x1,y1,..}, p2 = {x2,y2,..}
+     * @param controlPoints input format: {p1,p2, ...} for control points p1 =
+     * {x1,y1,..}, p2 = {x2,y2,..}
      */
     public BezierCurve(double[][] controlPoints) {
-        double[][] coordinateArrays = Util.MathTools.pointToCoordinateArray(controlPoints);
+        double[][] coordinateArrays = NumUtil.MathTools.pointToCoordinateArray(controlPoints);
         int numOfDimensions = coordinateArrays.length;
         for (int i = 0; i < numOfDimensions; i++) {
-            BezierPolynomial bp = new BezierPolynomial(controlPoints[i]);
+            BezierPolynomial bp = new BezierPolynomial(coordinateArrays[i]);
             add(bp);
         }
     }
@@ -49,44 +49,46 @@ public class BezierCurve extends ArrayList<BezierPolynomial> {
             this.get(i).print();
         }
     }
-    public XYSeries create2DPlotData(){
+
+    /**
+     * Creates a set of x,y points for plotting a 2D bezier curve
+     *
+     * @param curveSeries add to an existing XYSeries, or use null to generate a
+     * new series
+     * @return an updated XYSeries for plotting a composite bezier curve, or a
+     * new XYSeries
+     */
+    public XYSeries create2DPlotData(XYSeries curveSeries) {
         double numOfPoints = 10e3;
         double increment = 1.0 / numOfPoints;
         double xMarker;
         double yMarker;
         BezierPolynomial bpx = this.get(0);
         BezierPolynomial bpy = this.get(1);
-        XYSeries curveSeries = new XYSeries("Bezier Curve");
+        if (curveSeries == null) {
+            curveSeries = new XYSeries("Bezier Curve");
+        }
         // the bezier curve extends over the parameter t range from t = 0 to t = 1
-        for ( double i = 0; i < 1; i += increment ){
+        for (double i = 0; i < 1; i += increment) {
             xMarker = bpx.evaluate(i);
             yMarker = bpy.evaluate(i);
-            curveSeries.add( xMarker, yMarker);
+            curveSeries.add(xMarker, yMarker);
         }
         return curveSeries;
     }
-    public void plot2D() {
-        XYSeriesCollection dataset = new XYSeriesCollection();
-        dataset.addSeries(create2DPlotData());
-        JFreeChart chart = ChartFactory.createXYLineChart(
-                get(0).toText("t")+"\n"+get(1).toText("t"), "x", "y", dataset, PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(Color.white);
-        XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(Color.lightGray);
-        plot.setDomainGridlinePaint(Color.white);
-        plot.setRangeGridlinePaint(Color.white);
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, false);
-        renderer.setSeriesShapesVisible(1, false);
-        plot.setRenderer(renderer);
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-            ApplicationFrame frame = new ApplicationFrame("polynomial interpolation");
-        frame.setContentPane(chartPanel);
-        frame.setSize(600, 800);
-        frame.setVisible(true);
+
+    public ChartPanel plot2D(boolean visible) {
+        String title = get(0).toText("t") + "\n" + get(1).toText("t");
+        ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
+        dataSets.add(create2DPlotData(null));
+        return NumUtil.Plot.plot(title, dataSets, visible);
     }
-    
+    /* comments:
+     * 1. the curve is parameterized by t, which starts at t=0 and ends at t=1. x and y depend on the polynomials
+     * 2. the curve is continuous and has derivatives of all orders on t:[0,1]
+     * 3. the curve starts at the first control point and ends at the last control point
+     * 4. the interior control points do not (necessarily) lie on the curve
+     * 5. the end control points of the curve B have slopes B'(p_0) = n * (p_0-_p1) and p'(t=1) = n * (p_n - p_(n-1)), where n = # of points -1
+     * 6. the curve lies in the intersection of all convex sets containing the set of its control points.
+     */
 }

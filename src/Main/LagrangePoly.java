@@ -5,7 +5,7 @@
 package Main;
 
 import LagrangeInterpolation.LagrangePlot;
-import Util.Polynomial;
+import NumUtil.Polynomial;
 import javax.swing.JFrame;
 import org.jfree.ui.ApplicationFrame;
 

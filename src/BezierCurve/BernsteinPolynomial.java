@@ -4,13 +4,13 @@
  */
 package BezierCurve;
 
-import Util.Polynomial;
+import NumUtil.Polynomial;
 
 /**
  *
  * @author jbao
  */
-public class BernsteinPolynomial extends Util.Polynomial {
+public class BernsteinPolynomial extends NumUtil.Polynomial {
 
     /**
      * B(i,n)(t) = nCi * t^i * (1-t)^(n-i)
@@ -27,7 +27,7 @@ public class BernsteinPolynomial extends Util.Polynomial {
             result = result.times(singlePair);
         }
         // binomial coefficient
-        double binomCoef = Util.MathTools.binomial(n, i);
+        double binomCoef = NumUtil.MathTools.binomial(n, i);
         // nCi * t^i
         Polynomial tPow = new Polynomial(new double[][]{{i, binomCoef}});
         result = result.times(tPow);

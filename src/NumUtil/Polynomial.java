@@ -2,21 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Util;
+package NumUtil;
 
-import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
-import org.jfree.data.xy.XYSeriesCollection;
-import org.jfree.ui.ApplicationFrame;
 
 /**
  * key = power of variable x. value = coefficient of the variable term
@@ -74,7 +66,7 @@ public class Polynomial extends TreeMap<Double, Double> {
             coef = e.getValue();
             power = e.getKey();
             if (order <= power) {
-                derivTerm = new Polynomial(new double[][]{{power - order, coef * Util.MathTools.binomNum(power, order)}});
+                derivTerm = new Polynomial(new double[][]{{power - order, coef * NumUtil.MathTools.binomNum(power, order)}});
                 result = result.add(derivTerm);
             }
         }
@@ -213,48 +205,40 @@ public class Polynomial extends TreeMap<Double, Double> {
         System.out.println(this.toText("x"));
     }
 
-    public ChartPanel createPlot(double logBase, double min, double max) {
-
-        XYSeriesCollection dataset = new XYSeriesCollection();
+    public XYSeries createPlot(double logBase, double min, double max) {
 
         // curve pts
         double xmin = MathTools.logBase(logBase, min);
         double xmax = MathTools.logBase(logBase, max);
-        double numCurvePts = 10e2;
+        double numCurvePts = 10e3;
         double increment = (xmax - xmin) / numCurvePts;
         double xMarker;
         double yMarker;
-        XYSeries curveSeries = new XYSeries("Curve");
+        XYSeries curveSeries = new XYSeries("Polynomial P(x)");
         for (int i = 0; i < numCurvePts; i++) {
-            xMarker = Math.pow(logBase, xmin + increment * i);
+            if (logBase != 0) {
+                xMarker = Math.pow(logBase, xmin + increment * i);
+            } else {
+                xMarker = xmin + increment * i;
+            }
             yMarker = evaluate(xMarker);
             curveSeries.add(MathTools.logBase(logBase, xMarker), MathTools.logBase(logBase, yMarker));
         }
-        dataset.addSeries(curveSeries);
 
-        // chart
-        JFreeChart chart = ChartFactory.createXYLineChart(
-                toText(), "x", "f(x)", dataset, PlotOrientation.VERTICAL, true, true, false);
-        chart.setBackgroundPaint(Color.white);
-        XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(Color.lightGray);
-        plot.setDomainGridlinePaint(Color.white);
-        plot.setRangeGridlinePaint(Color.white);
-        XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-        renderer.setSeriesLinesVisible(0, false);
-        renderer.setSeriesShapesVisible(1, false);
-        plot.setRenderer(renderer);
-        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-        rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new java.awt.Dimension(500, 270));
-        return chartPanel;
+        return curveSeries;
     }
 
-    public void plot(double logBase, double min, double max) {
-        ApplicationFrame frame = new ApplicationFrame("polynomial interpolation");
-        frame.setContentPane(createPlot(logBase,min,max));
-        frame.setSize(600, 800);
-        frame.setVisible(true);
+    /**
+     * Creates a plot of P(x) vs x in log or linear space
+     *
+     * @param logBase to plot in linear space use logBase = 0, else use the log
+     * base here
+     * @param min linear space x min
+     * @param max linear space x max
+     */
+    public ChartPanel plot(double logBase, double min, double max, boolean visible) {
+        ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
+        dataSets.add(createPlot(logBase,min,max));
+        return NumUtil.Plot.plot(toText(),dataSets,visible);
     }
 }

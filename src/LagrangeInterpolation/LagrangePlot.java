@@ -8,7 +8,7 @@ package LagrangeInterpolation;
  *
  * @author jbao
  */
-import Util.Polynomial;
+import NumUtil.Polynomial;
 import java.awt.Color;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -19,7 +19,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import Util.MathTools;
+import NumUtil.MathTools;
 
 public class LagrangePlot {
 
@@ -38,7 +38,7 @@ public class LagrangePlot {
 
         // curve pts
         double xmin = MathTools.logBase(logBase, MathTools.min(data));
-        double xmax = MathTools.logBase(logBase, Util.MathTools.max(data));
+        double xmax = MathTools.logBase(logBase, NumUtil.MathTools.max(data));
         double numCurvePts = 10e2;
         double increment = (xmax - xmin) / numCurvePts;
         double xMarker;
