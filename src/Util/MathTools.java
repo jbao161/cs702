@@ -32,7 +32,20 @@ public class MathTools {
         }
         return result;
     }
-
+    public static double factorial(double value){
+        double result = 1;
+        for (double i = value; i > 0; i--){
+            result *= i;
+        }
+        return result;
+    }
+    public static double binomNum(double value, int numOfTerms){
+        double result = 1;
+        for (double i = value; i > value - numOfTerms; i --){
+            result *= i;
+        }
+        return result;
+    }
     public static double min(double[][] data) {
         double result = Double.MAX_VALUE;
         for (int i = 0; i < data.length; i++) {

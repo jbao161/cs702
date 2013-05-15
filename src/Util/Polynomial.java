@@ -54,6 +54,22 @@ public class Polynomial extends TreeMap<Double, Double> {
         return result;
     }
 
+    public Polynomial differentiate(int order) {
+        double coef;
+        double power;
+        Polynomial result = new Polynomial();
+        Polynomial derivTerm;
+        for (Map.Entry<Double, Double> e : this.entrySet()) {
+            coef = e.getValue();
+            power = e.getKey();
+            if (order <= power) {
+                derivTerm = new Polynomial(new double[][]{{power - order, coef* Util.MathTools.binomNum(power, order)}});
+                result = result.add(derivTerm);
+            }
+        }
+        return result;
+    }
+
     public Polynomial add(Polynomial px) {
         Polynomial result = new Polynomial();
         double coef;

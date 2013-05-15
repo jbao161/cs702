@@ -9,9 +9,15 @@ package Main;
  * @author jbao
  */
 import BezierCurve.BernsteinPolynomial;
+import java.util.ArrayList;
+
 public class BezierCurve {
-       public static void main(String args[]) {
-           BernsteinPolynomial.bernstein(2,3).print("t");
-           System.out.println(Util.MathTools.binomial(5, 3));
-       }
+
+    public static void main(String args[]) {
+        BernsteinPolynomial bp = new BernsteinPolynomial(2, 3);
+        bp.print("t");
+        bp.become(bp.differentiate(3));
+        bp.print("t");
+        ArrayList<Double> ad = new ArrayList<Double>();
+    }
 }
