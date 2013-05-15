@@ -5,7 +5,6 @@
 package BezierCurve;
 
 import Util.Polynomial;
-import java.util.Map;
 
 /**
  *
@@ -33,14 +32,6 @@ public class BernsteinPolynomial extends Util.Polynomial {
         Polynomial tPow = new Polynomial(new double[][]{{i, binomCoef}});
         result = result.times(tPow);
         become(result);
-    }
-
-    public BernsteinPolynomial become(Polynomial identity) {
-        this.clear();
-        for (Map.Entry<Double, Double> e : identity.entrySet()) {
-            this.put(e.getKey(), e.getValue());
-        }
-        return this;
     }
   
     /* comments:
