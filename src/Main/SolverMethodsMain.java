@@ -11,7 +11,7 @@ import FunctionModel.*;
  *
  * @author jbao
  */
-public class SolutionOfSingleVariableEq {
+public class SolverMethodsMain {
 
     public static void main(String[] args) {
         // iteration method

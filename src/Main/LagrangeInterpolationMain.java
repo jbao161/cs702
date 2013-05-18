@@ -13,7 +13,7 @@ import org.jfree.ui.ApplicationFrame;
  *
  * @author jbao
  */
-public class LagrangePoly {
+public class LagrangeInterpolationMain {
 
     public static void main(String[] args) {
         Polynomial n = new Polynomial();
