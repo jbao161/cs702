@@ -5,6 +5,7 @@
 package Main;
 
 import DataApproximation.NewtonDividedDifference;
+import HermiteInterpolation.HermitePolynomial;
 import java.util.Arrays;
 
 /**
@@ -20,5 +21,14 @@ public class DataApproximationMain {
         x = new double[]{1, 1.3, 1.6, 1.9, 2.2};
         y = new double[]{0.7651977, 0.6200860, 0.4554022, 0.2818186, 0.1103623};
         System.out.println(Arrays.deepToString(NewtonDividedDifference.findDifference(x, y)));
+
+        double[][] xy = {{1.3, 0.6200860, -0.5220232}, {1.6, 0.4554022, -0.5698959},
+            {1.9, 0.2818186, -0.5811571}};
+        double[][] result = HermiteInterpolation.HermitePolynomial.computeCoef(xy);
+        System.out.println(Arrays.deepToString(result));
+
+        HermitePolynomial hp = new HermitePolynomial(xy);
+        hp.print();
+
     }
 }

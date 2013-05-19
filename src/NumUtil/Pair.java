@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package LagrangeInterpolation;
+package NumUtil;
 
 import NumUtil.Polynomial;
 
@@ -13,7 +13,7 @@ import NumUtil.Polynomial;
  */
 public class Pair extends Polynomial {
 
-    Pair(double a) {
+    public Pair(double a) {
         this.put(1.0, 1.0); // variable x
         this.put(0.0, -a); // constant a
     }

@@ -4,6 +4,7 @@
  */
 package LagrangeInterpolation;
 
+import NumUtil.Pair;
 import NumUtil.Polynomial;
 import FunctionModel.FunctionModel;
 
