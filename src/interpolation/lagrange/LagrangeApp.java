@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package LagrangeInterpolation;
+package interpolation.lagrange;
 
-import NumUtil.Polynomial;
+import numutil.Polynomial;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.JFrame;
@@ -67,7 +67,7 @@ public class LagrangeApp extends javax.swing.JFrame {
 
     public void drawGraph() {
         lp = new LagrangePlot(0, data, px);
-        px = LagrangeInterpolation.LagrangePolynomial.interpolate(data);
+        px = interpolation.lagrange.LagrangePolynomial.interpolate(data);
         lp = new LagrangePlot(10, data, px);
         JFrame frame = new JFrame();
         frame.setSize(600, 800);
@@ -94,7 +94,7 @@ public class LagrangeApp extends javax.swing.JFrame {
     }
 
     public void setPolynomial() {
-        px = LagrangeInterpolation.LagrangePolynomial.interpolate(data);
+        px = interpolation.lagrange.LagrangePolynomial.interpolate(data);
     }
 
     /**

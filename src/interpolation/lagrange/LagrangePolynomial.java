@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package LagrangeInterpolation;
+package interpolation.lagrange;
 
-import NumUtil.Pair;
-import NumUtil.Polynomial;
-import FunctionModel.FunctionModel;
+import numutil.Pair;
+import numutil.Polynomial;
+import function.FunctionModel;
 
 /**
  *

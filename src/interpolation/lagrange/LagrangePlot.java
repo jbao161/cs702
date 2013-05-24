@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package LagrangeInterpolation;
+package interpolation.lagrange;
 
 /**
  *
  * @author jbao
  */
-import NumUtil.Polynomial;
+import numutil.Polynomial;
 import java.awt.Color;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -19,7 +19,7 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
-import NumUtil.MathTools;
+import numutil.MathTools;
 
 public class LagrangePlot {
 
@@ -38,7 +38,7 @@ public class LagrangePlot {
 
         // curve pts
         double xmin = MathTools.logBase(logBase, MathTools.min(data));
-        double xmax = MathTools.logBase(logBase, NumUtil.MathTools.max(data));
+        double xmax = MathTools.logBase(logBase, numutil.MathTools.max(data));
         double numCurvePts = 10e2;
         double increment = (xmax - xmin) / numCurvePts;
         double xMarker;
