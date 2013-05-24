@@ -4,7 +4,7 @@
  */
 package interpolation.lagrange;
 
-import numutil1.Polynomial;
+import numutil.Polynomial;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.JFrame;

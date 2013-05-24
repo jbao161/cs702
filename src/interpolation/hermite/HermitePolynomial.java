@@ -4,8 +4,8 @@
  */
 package interpolation.hermite;
 
-import numutil1.Pair;
-import numutil1.Polynomial;
+import numutil.Pair;
+import numutil.Polynomial;
 
 /**
  *

@@ -23,7 +23,7 @@ public class ModelPolynomial implements FunctionModel {
     public double dcompute(int derivative, double x, double[] polyCoefs) {
         double result = 0;
         for (int i = 0; i < polyCoefs.length; i++) {
-            result += polyCoefs[i] * numutil1.MathTools.factorial(i) * Math.pow(x, Math.max(0, i - derivative));
+            result += polyCoefs[i] * numutil.MathTools.factorial(i) * Math.pow(x, Math.max(0, i - derivative));
         }
         return result;
     }
