@@ -4,8 +4,8 @@
  */
 package interpolation.lagrange;
 
-import numutil.Pair;
-import numutil.Polynomial;
+import numutil1.Pair;
+import numutil1.Polynomial;
 import function.FunctionModel;
 
 /**
