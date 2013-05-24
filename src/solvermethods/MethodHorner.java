@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package solvermethods1;
+package solvermethods;
 
 import function.FunctionModel;
 import function.ModelPolynomial;
-import static solvermethods1.MethodSteffensen.DEBUG;
+import static solvermethods.MethodSteffensen.DEBUG;
 
 /**
  *

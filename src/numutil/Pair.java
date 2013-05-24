@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package numutil1;
+package numutil;
 
-import numutil1.Polynomial;
+import numutil.Polynomial;
 
 /**
  * a two term grouping of the form (x-a)

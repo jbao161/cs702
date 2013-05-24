@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package beziercurve1;
+package beziercurve;
 
 import java.util.ArrayList;
 import org.jfree.chart.ChartPanel;
@@ -20,7 +20,7 @@ public class BezierCurve extends ArrayList<BezierPolynomial> {
      * {x1,y1,..}, p2 = {x2,y2,..}
      */
     public BezierCurve(double[][] controlPoints) {
-        double[][] coordinateArrays = numutil1.MathTools.pointToCoordinateArray(controlPoints);
+        double[][] coordinateArrays = numutil.MathTools.pointToCoordinateArray(controlPoints);
         int numOfDimensions = coordinateArrays.length;
         for (int i = 0; i < numOfDimensions; i++) {
             BezierPolynomial bp = new BezierPolynomial(coordinateArrays[i]);
@@ -72,7 +72,7 @@ public class BezierCurve extends ArrayList<BezierPolynomial> {
         String title = get(0).toText("t") + "\n" + get(1).toText("t");
         ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
         dataSets.add(create2DPlotData(null));
-        return numutil1.Plot.plot(title, dataSets, visible);
+        return numutil.Plot.plot(title, dataSets, visible);
     }
     /* comments:
      * 1. the curve is parameterized by t, which starts at t=0 and ends at t=1. x and y depend on the polynomials

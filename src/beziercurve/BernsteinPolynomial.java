@@ -2,15 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package beziercurve1;
+package beziercurve;
 
-import numutil1.Polynomial;
+import numutil.Polynomial;
 
 /**
  *
  * @author jbao
  */
-public class BernsteinPolynomial extends numutil1.Polynomial {
+public class BernsteinPolynomial extends numutil.Polynomial {
 
     /**
      * B(i,n)(t) = nCi * t^i * (1-t)^(n-i)
@@ -27,7 +27,7 @@ public class BernsteinPolynomial extends numutil1.Polynomial {
             result = result.times(singlePair);
         }
         // binomial coefficient
-        double binomCoef = numutil1.MathTools.binomial(n, i);
+        double binomCoef = numutil.MathTools.binomial(n, i);
         // nCi * t^i
         Polynomial tPow = new Polynomial(new double[][]{{i, binomCoef}});
         result = result.times(tPow);

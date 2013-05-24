@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package main1;
+package main;
 
 /**
  *
@@ -10,7 +10,7 @@ package main1;
  */
 public class ShapesMain {
       public static void main(String[] args) {
-          double[][] ellipse = numutil1.Ellipse.calcPoints(1.0,10,10000);
-          numutil1.Plot.plot("Ellipse", ellipse, true);
+          double[][] ellipse = numutil.Ellipse.calcPoints(1.0,10,10000);
+          numutil.Plot.plot("Ellipse", ellipse, true);
       }
 }

@@ -2,15 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package beziercurve1;
+package beziercurve;
 
-import numutil1.Polynomial;
+import numutil.Polynomial;
 
 /**
  *
  * @author jbao
  */
-public class BezierPolynomial extends numutil1.Polynomial {
+public class BezierPolynomial extends numutil.Polynomial {
 
     /**
      * Sum(i=0 to n) {x_i * B(i,n)(t)}
