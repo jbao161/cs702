@@ -148,4 +148,6 @@ public class HermitePolynomial extends Polynomial {
         }
         return computeCoef(xArray, fxArray, dxArray);
     }
+    
+    
 }
