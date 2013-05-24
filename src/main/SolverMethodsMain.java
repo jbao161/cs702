@@ -2,17 +2,17 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package main1;
 
 import function.ModelPolynomial;
 import function.FunctionModel;
-import solvermethods.MethodFixedPoint;
-import solvermethods.SolverMethod;
-import solvermethods.MethodNewton;
-import solvermethods.MethodSecant;
-import solvermethods.MethodBisection;
-import solvermethods.MethodFalsePosition;
-import solvermethods.MethodNetownModified;
+import solvermethods1.MethodFixedPoint;
+import solvermethods1.SolverMethod;
+import solvermethods1.MethodNewton;
+import solvermethods1.MethodSecant;
+import solvermethods1.MethodBisection;
+import solvermethods1.MethodFalsePosition;
+import solvermethods1.MethodNetownModified;
 
 /**
  *

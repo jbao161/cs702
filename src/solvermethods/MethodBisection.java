@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package solvermethods;
+package solvermethods1;
 
 import function.FunctionModel;
-import numutil.MathTools;
+import numutil1.MathTools;
 
 /**
  *

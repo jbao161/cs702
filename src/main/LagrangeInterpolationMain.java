@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package main1;
 
 import interpolation.lagrange.LagrangePlot;
-import numutil.Polynomial;
+import numutil1.Polynomial;
 import javax.swing.JFrame;
 import org.jfree.ui.ApplicationFrame;
 

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package numutil;
+package numutil1;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -66,7 +66,7 @@ public class Polynomial extends TreeMap<Double, Double> {
             coef = e.getValue();
             power = e.getKey();
             if (order <= power) {
-                derivTerm = new Polynomial(new double[][]{{power - order, coef * numutil.MathTools.binomNum(power, order)}});
+                derivTerm = new Polynomial(new double[][]{{power - order, coef * numutil1.MathTools.binomNum(power, order)}});
                 result = result.add(derivTerm);
             }
         }
@@ -239,6 +239,6 @@ public class Polynomial extends TreeMap<Double, Double> {
     public ChartPanel plot(double logBase, double min, double max, boolean visible) {
         ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
         dataSets.add(createPlot(logBase,min,max));
-        return numutil.Plot.plot(toText(),dataSets,visible);
+        return numutil1.Plot.plot(toText(),dataSets,visible);
     }
 }

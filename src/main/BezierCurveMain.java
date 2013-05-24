@@ -2,16 +2,16 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package main1;
 
 /**
  *
  * @author jbao
  */
-import beziercurve.BernsteinPolynomial;
-import beziercurve.BezierCurve;
-import beziercurve.BezierPolynomial;
-import numutil.Polynomial;
+import beziercurve1.BernsteinPolynomial;
+import beziercurve1.BezierCurve;
+import beziercurve1.BezierPolynomial;
+import numutil1.Polynomial;
 import java.util.ArrayList;
 import org.jfree.data.xy.XYSeries;
 
@@ -59,7 +59,7 @@ public class BezierCurveMain {
         XYSeries xy4 = bc.create2DPlotData(xy3);
         ArrayList<XYSeries> datasets = new ArrayList<XYSeries>();
         datasets.add(xy4);
-        numutil.Plot.plot("composite bezier curve", datasets, true);
+        numutil1.Plot.plot("composite bezier curve", datasets, true);
 
     }
 }
