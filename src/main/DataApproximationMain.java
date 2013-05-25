@@ -38,5 +38,7 @@ public class DataApproximationMain {
 
         answer = interpolation.bspline.ClampedCubicSpline.computePoly(x1, y1, 1.0, Math.pow(Math.E, 3));
         System.out.println(Arrays.deepToString(answer));
+        
+        
     }
 }

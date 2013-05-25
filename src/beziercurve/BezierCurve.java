@@ -35,6 +35,32 @@ public class BezierCurve extends ArrayList<BezierPolynomial> {
         add(bp);
     }
 
+    public static double[][][] computePoly(double[][] points, double[][] leftGuidePoints, double[][] rightGuidePoints) {
+        int n = points.length - 1;
+        double[][] xy = numutil.MathTools.pointToCoordinateArray(points);
+        double[][] xyl = numutil.MathTools.pointToCoordinateArray(leftGuidePoints);
+        double[][] xyr = numutil.MathTools.pointToCoordinateArray(rightGuidePoints);
+        double[] x = xy[0];
+        double[] y = xy[1];
+        double[] xl = xyl[0];
+        double[] yl = xyl[1];
+        double[] xr = xyr[0];
+        double[] yr = xyr[1];
+        double[][] a = new double[n][4];
+        double[][] b = new double[n][4];
+        for (int i = 0; i < n; i++) {
+            a[i][0] = x[i];
+            b[i][0] = y[i];
+            a[i][1] = 3 * (xl[i] - x[i]);
+            b[i][1] = 3 * (yl[i] - y[i]);
+            a[i][2] = 3 * (x[i] + xl[i + 1] - 2 * xr[i]);
+            b[i][2] = 3 * (y[i] + yl[i + 1] - 2 * yr[i]);
+            a[i][3] = x[i + 1] - x[i] + 3 * xl[i] - 3 * xr[i + 1];
+            b[i][3] = y[i + 1] - y[i] + 3 * yl[i] - 3 * yr[i + 1];
+        }
+        return new double[][][] {a,b};
+    }
+
     public void print() {
         for (int i = 0; i < this.size(); i++) {
             this.get(i).print();
