@@ -73,6 +73,28 @@ public class Polynomial extends TreeMap<Double, Double> {
         return result;
     }
 
+    public Polynomial antiderivative(int order) {
+        double coef;
+        double power;
+        Polynomial result = new Polynomial();
+        Polynomial antiderivTerm;
+        // for each term, raise its power by order amount and divide coefficient by (order+power)!/power!
+        for (Map.Entry<Double, Double> e : this.entrySet()) {
+            coef = e.getValue();
+            power = e.getKey();
+            antiderivTerm = new Polynomial(new double[][]{{power + order, coef / numutil.MathTools.binomNum(power + order, order)}});
+            result = result.add(antiderivTerm);
+        }
+        return result;
+    }
+    
+    public double integrate(double x1, double x2){
+        // create a new polynomial that using the antiderivative method
+        Polynomial antiderivative = antiderivative(1);
+        // use the fundamental theorem of calculus to evaluate the integral by antiderivative at endpoints
+        return antiderivative.evaluate(x2) - antiderivative.evaluate(x1);
+    }
+
     public Polynomial add(Polynomial px) {
         Polynomial result = new Polynomial();
         double coef;
@@ -238,7 +260,7 @@ public class Polynomial extends TreeMap<Double, Double> {
      */
     public ChartPanel plot(double logBase, double min, double max, boolean visible) {
         ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
-        dataSets.add(createPlot(logBase,min,max));
-        return numutil.Plot.plot(toText(),dataSets,visible);
+        dataSets.add(createPlot(logBase, min, max));
+        return numutil.Plot.plot(toText(), dataSets, visible);
     }
 }

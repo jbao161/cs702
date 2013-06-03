@@ -4,7 +4,7 @@
  */
 package main;
 
-import interpolation.lagrange.LagrangePlot;
+import interpolatelagrange.LagrangePlot;
 import numutil.Polynomial;
 import javax.swing.JFrame;
 import org.jfree.ui.ApplicationFrame;
@@ -51,7 +51,7 @@ public class LagrangeInterpolationMain {
             data[i][0] = concentration[i];
             data[i][1] = intensity[i];
         }
-        Polynomial result = interpolation.lagrange.LagrangePolynomial.interpolate(data);
+        Polynomial result = interpolatelagrange.LagrangePolynomial.interpolate(data);
         result.print();
         System.out.println(result.toString());
         System.out.println(result.evaluate(1.0));
@@ -70,7 +70,7 @@ public class LagrangeInterpolationMain {
             data[i][0] = concentration2[i];
             data[i][1] = intensity2[i];
         }
-        result = interpolation.lagrange.LagrangePolynomial.interpolate(data);
+        result = interpolatelagrange.LagrangePolynomial.interpolate(data);
         lp = new LagrangePlot(10, data, result);
         frame = new ApplicationFrame("polynomial interpolation");
         frame.setContentPane(lp.chartPanel);
