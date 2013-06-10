@@ -102,7 +102,7 @@ public class Integral {
     public static double newtonc1(double x1, double x2, FunctionModel fx, double[] equationParams) {
         double stepSize = x2 - x1;
         return stepSize / 2.0 * (fx.compute(x2, equationParams) + fx.compute(x1, equationParams));
-    }    // exact for linear function
+    }    // trapezoidal rule: exact for linear function
 
     public static double newtonc2(double x1, double x2, FunctionModel fx, double[] equationParams) {
         double stepSize = (x2 - x1) / 2.0;
@@ -110,7 +110,7 @@ public class Integral {
         double fx2 = fx.compute(x1 + stepSize, equationParams);
         double fx3 = fx.compute(x2, equationParams);
         return stepSize / 3.0 * (fx1 + 4.0 * fx2 + fx3);
-    }    // exact for three degree polynomials
+    }    // simpson's rule: exact for three degree polynomials
 
     public static double newtonc3(double x1, double x2, FunctionModel fx, double[] equationParams) {
         double stepSize = (x2 - x1) / 3.0;

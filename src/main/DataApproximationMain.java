@@ -5,6 +5,7 @@
 package main;
 
 import dataapproximation.NewtonDividedDifference;
+import function.FunctionModel;
 import interpolationhermite.HermitePolynomial;
 import java.util.Arrays;
 import numutil.Polynomial;
@@ -43,8 +44,20 @@ public class DataApproximationMain {
         answer = interpolationbspline.ClampedCubicSpline.computePoly(x1, y1, 1.0, Math.pow(Math.E, 3));
         System.out.println(Arrays.deepToString(answer));
 
+        // romberg integration
+        function.FunctionModel ex = new function.FunctionModel() {
+            @Override
+            public double compute(double input, double[] equationParams) {
+                return Math.sin(input);
+            }
+
+            @Override
+            public double dcompute(int derivative, double input, double[] equationParams) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+        double[][] r1 = calculus.IntegralComposite.rombergc1(6, 0.0, Math.PI, ex, new double[0]);
+        System.out.println(Arrays.deepToString(r1));
 
     }
-    
- 
 }
