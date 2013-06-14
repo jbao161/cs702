@@ -5,6 +5,7 @@
 package numutil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import org.jfree.chart.ChartPanel;
@@ -51,10 +52,22 @@ public class Polynomial extends TreeMap<Double, Double> {
      */
     public double evaluate(double x) {
         double result = 0;
-        for (Map.Entry<Double, Double> e : this.entrySet()) {
+        Iterator<Map.Entry<Double, Double>> iter = this.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Double, Double> e = iter.next();
             result += Math.pow(x, e.getKey()) * e.getValue();
         }
         return result;
+    }
+
+    public void clean() {
+        Iterator<Map.Entry<Double, Double>> iter = this.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<Double, Double> e = iter.next();
+            if (e.getValue() == 0) {
+                iter.remove();
+            }
+        }
     }
 
     public Polynomial differentiate(int order) {
@@ -87,8 +100,8 @@ public class Polynomial extends TreeMap<Double, Double> {
         }
         return result;
     }
-    
-    public double integrate(double x1, double x2){
+
+    public double integrate(double x1, double x2) {
         // create a new polynomial that using the antiderivative method
         Polynomial antiderivative = antiderivative(1);
         // use the fundamental theorem of calculus to evaluate the integral by antiderivative at endpoints
@@ -109,6 +122,29 @@ public class Polynomial extends TreeMap<Double, Double> {
                 }
                 result.put(power, coef);
             }
+        }
+        return result;
+    }
+
+    public Polynomial subtract(Polynomial px) {
+        return this.add(px.additiveInverse());
+    }
+
+    public Polynomial divide(double constant) {
+        return this.times(1.0 / constant);
+    }
+
+    /*
+     * makes all the coefficients of opposite sign
+     */
+    public Polynomial additiveInverse() {
+        Polynomial result = new Polynomial();
+        double coef;
+        double exponent;
+        for (Map.Entry<Double, Double> e : this.entrySet()) {
+            coef = 0 - e.getValue();
+            exponent = e.getKey();
+            result.put(exponent, coef);
         }
         return result;
     }
@@ -162,6 +198,28 @@ public class Polynomial extends TreeMap<Double, Double> {
         }
     }
 
+    public boolean equals(Polynomial px) {
+        this.clean();
+        px.clean();
+        if (this.size() != px.size()) {
+            return false;
+        } else {
+            double coef;
+            double exponent;
+
+            Iterator<Map.Entry<Double, Double>> iter = this.entrySet().iterator();
+            while (iter.hasNext()) {
+                Map.Entry<Double, Double> e = iter.next();
+                coef = e.getValue();
+                exponent = e.getKey();
+                if (coef != px.get(exponent)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
     public double[][] toPrimitive() {
 
         Double[][] objResult = this.entrySet().toArray(new Double[this.entrySet().size()][]);
@@ -212,9 +270,16 @@ public class Polynomial extends TreeMap<Double, Double> {
                 }
             }
         }
-        // removes the leading add string
-        if (result.length() > operator.length()) {
-            result = result.substring(operator.length());
+        // formats the leading operation string
+        String leadingOperator = result.substring(0, operator.length());
+        if (leadingOperator.equals(add)) {
+            result = result.substring(add.length());
+        }
+        if (leadingOperator.equals(subtract)) {
+            result = "-" + result.substring(subtract.length());
+        }
+        if (result.equals("")) {
+            return "0";
         }
         return result;
     }
