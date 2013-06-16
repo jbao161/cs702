@@ -14,6 +14,7 @@ public class calculusMain {
     /*
      * numerical integration: lagrange iterpolating polynomials, composite lagrange,
      */
+
     public static void main(String args[]) {
 
         Polynomial p = new Polynomial(new double[]{0, 1.0});
@@ -23,7 +24,7 @@ public class calculusMain {
         function.FunctionModel ex = new function.FunctionModel() {
             @Override
             public double compute(double input, double[] equationParams) {
-                return 100/input/input*Math.sin(10/input);
+                return 100 / input / input * Math.sin(10 / input);
             }
 
             @Override
@@ -40,10 +41,9 @@ public class calculusMain {
         System.out.println(r2);
         System.out.println(r3);
         System.out.println(r4);
-        
-        double r5 = calculus.AdaptiveQuadrature.aq(1.0,3.0,ex,equationParams, 0.0001, 30);
-        System.out.println(r5);
-        System.out.println(ex.compute(1.75, equationParams));
-        
+
+        double r5 = calculus.AdaptiveQuadrature.aq2(1.0, 3.0, ex, equationParams, 0.0001, 300);
+        System.out.println("aq: " + r5);
+
     }
 }
