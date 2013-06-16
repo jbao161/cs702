@@ -15,15 +15,18 @@ public class LegendrePolyMain {
 
     public static void main(String[] args) {
         Polynomial lp;
-        int n = 10;
-        for (int i = 0; i < n; i++) {
-            System.out.println(LegendrePolynomial.derivDefinition(i).equals(LegendrePolynomial.recursiveDefinition(i)));
+        int n = 30;
+        double TOL = 10e-5;
+        boolean test = true;
+        for (int i = 0; i <= n; i++) {
+            test = test && LegendrePolynomial.derivDefinition(i).equals(LegendrePolynomial.recursiveDefinition(i), TOL);
             /*
-            lp = LegendrePolynomial.derivDefinition(i);
-            lp.print();
-            lp = LegendrePolynomial.recursiveDefinition(i);
-            lp.print();
-            */
+             lp = LegendrePolynomial.derivDefinition(i);
+             lp.print();
+             lp = LegendrePolynomial.recursiveDefinition(i);
+             lp.print();
+             */
         }
+        System.out.println(test);
     }
 }

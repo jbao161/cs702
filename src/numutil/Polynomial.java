@@ -198,7 +198,7 @@ public class Polynomial extends TreeMap<Double, Double> {
         }
     }
 
-    public boolean equals(Polynomial px) {
+    public boolean equals(Polynomial px, double TOL) {
         this.clean();
         px.clean();
         if (this.size() != px.size()) {
@@ -212,12 +212,16 @@ public class Polynomial extends TreeMap<Double, Double> {
                 Map.Entry<Double, Double> e = iter.next();
                 coef = e.getValue();
                 exponent = e.getKey();
-                if (coef != px.get(exponent)) {
+                if (Math.abs(coef - px.get(exponent)) > TOL) {
                     return false;
                 }
             }
             return true;
         }
+    }
+
+    public boolean equals(Polynomial px) {
+        return equals(px, 0);
     }
 
     public double[][] toPrimitive() {
