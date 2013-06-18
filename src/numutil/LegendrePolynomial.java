@@ -4,6 +4,8 @@
  */
 package numutil;
 
+import function.FunctionModel;
+
 /**
  *
  * @author jbao
@@ -55,15 +57,43 @@ public class LegendrePolynomial {
         return (p[0].subtract(p[1])).divide(n);
     }
 
+    /*
+     * not finished
+     */
     public static Polynomial binomialDefinition(int n) {
         /* binomial definition: Sum[ n_C_k * (-n-1)_C_k * ((1-x) / 2)^k], for k from 0 to n
          = 2^n*Sum[x^k* n_C_k * ((n+k-1)/2)_C_n
          */
         Polynomial result = new Polynomial();
         double[] binom = new double[2];
-        for (int k =0; k <=n; k++){
-        binom[0] = MathTools.binomial(n, k);
-        binom[1]= MathTools.binomial(-n-1, k);
+        for (int k = 0; k <= n; k++) {
+            binom[0] = MathTools.binomial(n, k);
+            binom[1] = MathTools.binomial(-n - 1, k);
+        }
+        return result;
+    }
+    // starting with n = 2, the root of the legendre polynomial and the corresponding coef = Integral[Product[(x-xj)/(xi-xj)]dx], over x from -1 to 1 where xn are the roots of the nth legendre polynomial
+    public static double[][][] rootCoef = new double[][][]{
+        {{0.5773502692, 1.0}, {-0.5773502692, 1.0}},
+        {{0.7745966692, 0.5555555556}, {0.0, 0.8888888889}, {-0.7745966692, 0.5555555556}},
+        {{0.8611363116, 0.3478548451}, {0.3399810436, 0.6521451549}, {-0.3399810436, 0.6521451549}, {-0.8611363116, 0.3478548451}},
+        {{0.9061798459, 0.2369268850}, {0.5384693101, 0.4786286705}, {0.0, 0.5688888889}, {-0.5384693101, 0.4786286705}, {-0.9061798459, 0.2369268850}}
+    };
+
+    public static double gaussquad(FunctionModel fx, double[] equationParams, int n, double x1, double x2) {
+        if (n < 2 || n >= rootCoef.length + 2) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+        double[][] tablelookup = rootCoef[n - 2];
+        double result = 0;
+        double root, coef, function;
+        for (int i = 0; i < tablelookup.length; i++) {
+            root = tablelookup[i][0];
+            coef = tablelookup[i][1];
+            root = ((x2 - x1) * root + (x2 + x1)) / 2.0; // transform integral from x2 to x1 into integral from -1 to 1
+            function = fx.compute(root, equationParams);
+            function *= (x2 - x1) / 2.0; // transform integral from x2 to x1 into integral from -1 to 1
+            result += coef * function;
         }
         return result;
     }

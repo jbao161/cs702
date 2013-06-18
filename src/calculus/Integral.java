@@ -13,13 +13,27 @@ import numutil.Polynomial;
  * @author jbao
  */
 public class Integral {
-
-    public static double newtoncotes(String endpoints, int n, double x1, double x2, FunctionModel function, double[] equationParams) {
+    /**
+     * Newton-Cotes integration formula for (n+1) points. uses Lagrange
+     * interpolating polynomial to approximate the integral. uses the end points
+     * of the specified domain interval.
+     *
+     * @param useEndPoints true = closed formula, includes end points. false = open formula, use only interior points.
+     * @param n the order of the formula
+     * @param x1 lower bound of integration domain
+     * @param x2 upper bound of integration domain
+     * @param function the function to be integrated
+     * @param equationParams the parameters, if applicable, of the function (ex:
+     * coefficients of a polynomial)
+     * @return a numerical value for the definite integral of the function from
+     * x1 to x2
+     */
+    public static double newtoncotes(boolean useEndpoints, int n, double x1, double x2, FunctionModel function, double[] equationParams) {
         double xi;
         double start = x1;
         double stepSize = (x2 - x1) / n;;
         // use only interior points for open formula
-        if (endpoints.equalsIgnoreCase("open")) {
+        if (useEndpoints == false) {
             stepSize = (x2 - x1) / (n + 2);
             start = x1 + stepSize;
         }
