@@ -53,15 +53,57 @@ public class MultipleIntegral {
         double result = h * (sum1 + 2 * sum2 + 4 * sum3) / 3;
         return result;
     }
-    
-     public static double gaussianDouble (double a, double b, int m, int n, FunctionModel bounds1, FunctionModel bounds2, FunctionModel fx, double[] equationParams) {
-        double result =0;
-        double h1 = (b-a)/2;
-        double h2 = (b+1)/2;
-        for (int i=0; i <=m; i ++){
+
+    public static double gaussianDouble(double a, double b, int m, int n, FunctionModel bounds1, FunctionModel bounds2, FunctionModel fx, double[] equationParams) {
+        double result = 0;
+        double h1 = (b - a) / 2;
+        double h2 = (b + 1) / 2;
+        double k1 = Double.NaN, k2 = Double.NaN;
+        for (int i = 0; i <= m; i++) {
             double jx = 0;
-             double x = h1 * LegendrePolynomial.rootCoef[m][i][0] + h2;
+            double x = h1 * LegendrePolynomial.rootCoef[m][i][0] + h2;
+            double d1 = bounds2.compute(x, null);
+            double c1 = bounds1.compute(x, null);
+            k1 = (d1 - c1) / 2;
+            k2 = (d1 + c1) / 2;
+            for (int j = 1; j <= n; j++) {
+                double y = k1 * LegendrePolynomial.rootCoef[n][j][0] + k2;
+                double q = fx.compute(Double.NaN, equationParams);
+                jx += LegendrePolynomial.rootCoef[n][j][1] * q;
+            }
+            result += LegendrePolynomial.rootCoef[m][i][1] * k1 * jx;
         }
-         return result;
-     }
+        result *= h1;
+        return result;
+    }
+
+    public static double gaussianTriple(double a, double b, int m, int n, int p, FunctionModel[] bounds, FunctionModel fx, double[] equationParams) {
+        double result = 0;
+        double h1 = (b - a) / 2;
+        double h2 = (b + 1) / 2;
+        for (int i = 1; i <= m; i++) {
+            double jx = 0;
+            double x = h1 * LegendrePolynomial.rootCoef[m][i][0] + h2;
+            double d1 = bounds[1].compute(x, null);
+            double c1 = bounds[0].compute(x, null);
+            double k1 = (d1 - c1) / 2;
+            double k2 = (d1 + c1) / 2;
+            for (int j = 1; j <= n; j++) {
+                double jy = -0;
+                double y = k1 * LegendrePolynomial.rootCoef[n][j][0] + k2;
+                double beta1 = bounds[3].compute(Double.NaN, new double[]{x, y});
+                double alpha1 = bounds[2].compute(Double.NaN, new double[]{x, y});
+                double l1 = (beta1 - alpha1) / 2;
+                double l2 = (beta1 + alpha1) / 2;
+                for (int k = 0; k <= p; k++) {
+                    double z = l1 * LegendrePolynomial.rootCoef[p][k][0] + l2;
+                    double q = fx.compute(Double.NaN, new double[]{x, y, z});
+                    jy += LegendrePolynomial.rootCoef[p][k][1] * q;
+                }
+                result += LegendrePolynomial.rootCoef[m][i][1] * k1 * jx;
+            }
+        }
+        result *= h1;
+        return result;
+    }
 }
