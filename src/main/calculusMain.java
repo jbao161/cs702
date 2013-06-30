@@ -4,6 +4,7 @@
  */
 package main;
 
+import numutil.MathTools;
 import numutil.Polynomial;
 
 /**
@@ -45,5 +46,6 @@ public class calculusMain {
         double r5 = calculus.AdaptiveQuadrature.aq2(1.0, 3.0, ex, equationParams, 0.0001, 300);
         System.out.println("aq: " + r5);
 
+        System.out.println(MathTools.returnRate(10, 0.5, 0.75));
     }
 }

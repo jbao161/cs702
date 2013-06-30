@@ -105,4 +105,24 @@ public class MathTools {
         }
         return result;
     }
+/**
+ * calculates the expected return from a random buying game
+ * @param iterations how many times you resell your unwanted purchases
+ * @param successRate chance of getting the purchase you want
+ * @param sellRate the percent return from selling a purchase you don't want
+ * @return 
+ */
+    public static double returnRate(int iterations, double successRate, double sellRate) {
+        double earnings = successRate;
+        double reinvestment = 1 - earnings;
+        double cash;
+        for (int i = 0; i < iterations; i++) {
+            cash = reinvestment * sellRate;
+            earnings += cash * successRate;
+            reinvestment = cash * (1 - successRate);
+            System.out.println("cash: "+cash);
+            System.out.println("resell earnings: "+ cash*successRate);
+        }
+        return earnings;
+    }
 }
