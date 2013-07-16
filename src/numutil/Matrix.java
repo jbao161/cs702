@@ -215,6 +215,177 @@ public class Matrix {
         return result;
     }
 
+    public Matrix reduce() {
+        Matrix result = new Matrix(Copy(array));
+        linearalgebra.SystemOfLinearEq.reduce(result.array);
+        return result;
+    }
+
+    private void reduce(boolean nocopy) {
+        linearalgebra.SystemOfLinearEq.reduce(array);
+    }
+
+    public double[] solve(boolean print) {
+        double[] result = linearalgebra.SystemOfLinearEq.Gaussian(Copy(array));
+        if (print) {
+            System.out.println(Arrays.toString(result));
+        }
+        return result;
+    }
+
+    public double[] solve() {
+        return solve(false);
+    }
+
+    /**
+     * Creates a matrix of a n_x_n square matrix augmented with the n_x_n
+     * identity.
+     *
+     * @return
+     */
+    private Matrix augment() {
+        int[] dim = dim();
+        if (dim[0] != dim[1]) {
+            throw new ArithmeticException("matrix is not square: (" + dim[0] + "x" + dim[1] + ")");
+        }
+        int n = dim[0];
+        double[][] identity = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                identity[i][j] = 0;
+            }
+            identity[i][i] = 1;
+        }
+        double[][] augment = new double[n][2 * n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                augment[i][j] = array[i][j];
+                augment[i][j + n] = identity[i][j];
+            }
+        }
+        Matrix result = new Matrix(augment);
+        return result;
+    }
+
+    /**
+     * Creates a matrix by augmenting column or row vectors.
+     *
+     * @param matrix
+     * @param column true joins the array as column vectors to the right of
+     * matrix. false joins the array as row vectors to the bottom of the matrix.
+     * @return
+     */
+    public Matrix augment(double[][] matrix, boolean column) {
+        int[] dim = dim();
+        int row = dim[0];
+        int col = dim[1];
+        double[][] addend = Copy(matrix);
+        Rectify(addend);
+        int addrow = addend.length;
+        int addcol = addend[0].length;
+        if (column) {
+            col += addcol;
+            if (row != addrow) {
+                throw new ArithmeticException("row lengths do not match: " + row + "," + addrow);
+            }
+        } else {
+            row += addrow;
+            if (col != addcol) {
+                throw new ArithmeticException("row lengths do not match: " + col + "," + addcol);
+            }
+        }
+        double[][] augment = new double[row][col];
+        if (column) {
+            for (int i = 0; i < dim[0]; i++) {
+                for (int j = 0; j < dim[1]; j++) {
+                    augment[i][j] = array[i][j];
+                    augment[i][j + addcol] = addend[i][j];
+                }
+            }
+        } else {
+            for (int i = 0; i < dim[0]; i++) {
+                for (int j = 0; j < dim[1]; j++) {
+                    augment[i][j] = array[i][j];
+                    augment[i + addrow][j] = addend[i][j];
+                }
+            }
+        }
+        Matrix result = new Matrix(augment);
+        return result;
+    }
+
+    /**
+     * Creates a matrix by augmenting another matrix as column or row vectors.
+     *
+     * @param matrix
+     * @param column true joins the input matrix as column vectors to the right
+     * of matrix. false joins the input matrix as row vectors to the bottom of
+     * the matrix.
+     * @return
+     */
+    public Matrix augment(Matrix matrix, boolean column) {
+        return augment(matrix.array, column);
+    }
+
+    public static Matrix Identity(int n) {
+        Matrix result = new Matrix(Identity(n, true));
+        return result;
+
+    }
+
+    private static double[][] Identity(int n, boolean array) {
+        double[][] identity = new double[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                identity[i][j] = 0;
+            }
+            identity[i][i] = 1;
+        }
+        return identity;
+    }
+
+    public Matrix transpose() {
+        int[] dim = dim();
+        double[][] transpose = new double[dim[1]][dim[0]];
+        for (int i = 0; i < dim[1]; i++) {
+            for (int j = 0; j < dim[0]; j++) {
+                transpose[i][j] = this.array[j][i];
+            }
+        }
+        Matrix result = new Matrix(transpose);
+        return result;
+    }
+
+    /**
+     * Returns the inverse of a square matrix. Original matrix is not modified.
+     * @return 
+     */
+    public Matrix inverse() {
+        int[] dim = dim();
+        int n = dim[0];
+        Matrix result = this.augment();
+        result.reduce(true);
+        result.crop(new int[]{0, n, n, 2 * n});
+        return result;
+    }
+
+    private void crop(int[] corners) {
+        int rowstart = corners[0];
+        int rowend = corners[1];
+        int colstart = corners[2];
+        int colend = corners[3];
+
+        int row = rowend - rowstart;
+        int col = colend - colstart;
+        double[][] crop = new double[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                crop[i][j] = array[rowstart + i][colstart + j];
+            }
+        }
+        array = crop;
+    }
+
     public static void main(String[] args) {
         double[][] test = {{1, 2, 3}, {1}, {1, 2, 3, 4, 5}};
         Matrix m1 = new Matrix(test);
@@ -226,9 +397,18 @@ public class Matrix {
         m1.print();
         m1.multiply(m2).print();
 
-        m2 = new Matrix(new double[][]{{1, 2, 3}, {2, 3, 4}, {3, 4, 5}});
+        m2 = new Matrix(new double[][]{{1, 2, 3}, {2, 3, 4}, {0, 4, 5}});
         m1 = new Matrix(new double[][]{{1, 4, 6}, {3, 5, 9}});
         m1.multiply(m2).print();
         m1.multiply(2).print();
+        System.out.println(Arrays.toString(m1.solve()));
+        m1.print();
+        m1.transpose().print();
+        m1 = new Matrix(4, 4, 5);
+        m2.augment(Identity(3), true).print();
+        m2.print();
+        m2.augment(Identity(3), true).reduce().print();
+        m2.inverse().print();
+        m2.print();
     }
 }
