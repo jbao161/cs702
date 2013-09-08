@@ -15,20 +15,23 @@ import numutil.Polynomial;
 public class LegendrePolyMain {
 
     public static void main(String[] args) {
+        Polynomial l8 = LegendrePolynomial.derivDefinition(8);
+        l8.root_bisection(-4,4,100,1e-8);
+        
         // test two different ways of defining the nth legendre polynomial
-        if (false) {
+        if (true) {
             Polynomial lp;
-            int n = 30;
+            int n = 8;
             double TOL = 10e-5;
             boolean test = true;
             for (int i = 0; i <= n; i++) {
                 test = test && LegendrePolynomial.derivDefinition(i).equals(LegendrePolynomial.recursiveDefinition(i), TOL);
-                /*
+                
                  lp = LegendrePolynomial.derivDefinition(i);
                  lp.print();
                  lp = LegendrePolynomial.recursiveDefinition(i);
                  lp.print();
-                 */
+                 
             }
             System.out.println(test);
         }

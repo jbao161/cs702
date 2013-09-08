@@ -198,6 +198,13 @@ public class Polynomial extends TreeMap<Double, Double> {
         }
     }
 
+    /**
+     * checks if two polynomials are equal, to a tolerance
+     *
+     * @param px comparison polynomial
+     * @param TOL the difference between the coefficients acceptable
+     * @return true/false : the polynomials are equal
+     */
     public boolean equals(Polynomial px, double TOL) {
         this.clean();
         px.clean();
@@ -222,6 +229,23 @@ public class Polynomial extends TreeMap<Double, Double> {
 
     public boolean equals(Polynomial px) {
         return equals(px, 0);
+    }
+
+    public double root_bisection(double lowerBound, double upperBound, int max_iter, double TOL) {
+        solvermethods.SolverMethod bisection = new solvermethods.MethodBisection();
+        bisection.TOL = TOL;
+        bisection.maxIter = max_iter;
+        function.FunctionModel poly = new function.FunctionModel() {
+            public double compute(double x, double[] params) {
+                return evaluate(x);
+            }
+
+            public double dcompute(int degree, double x, double[] params) {
+                return differentiate(1).evaluate(x);
+            }
+        };
+        Object[] params = new Object[] {poly, new double[] {lowerBound, upperBound}, new double[]{}};
+        return bisection.solve(params);
     }
 
     public double[][] toPrimitive() {
