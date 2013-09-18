@@ -71,6 +71,14 @@ public class Matrix {
         this.array = array;
     }
 
+    public  Matrix(double[] s_array) {
+        double[][] matrix = new double[s_array.length][1];
+        for (int i = 0; i < s_array.length; i++) {
+            matrix[i][0] = s_array[i];
+        }
+        this.array = matrix;
+    }
+
     public void set(int row, int col, double entry) {
         array[row][col] = entry;
     }
@@ -87,6 +95,21 @@ public class Matrix {
             result[i] = new double[array[i].length];
             for (int j = 0; j < array[i].length; j++) {
                 result[i][j] = array[i][j];
+            }
+        }
+        return result;
+    }
+
+    public static double[][] Diagonal(double[][] array) {
+        double[][] result = new double[array.length][];
+        for (int i = 0; i < array.length; i++) {
+            result[i] = new double[array[i].length];
+            for (int j = 0; j < array[i].length; j++) {
+                if (i == j) {
+                    result[i][j] = array[i][j];
+                } else {
+                    result[i][j] = 0;
+                }
             }
         }
         return result;
@@ -358,7 +381,8 @@ public class Matrix {
 
     /**
      * Returns the inverse of a square matrix. Original matrix is not modified.
-     * @return 
+     *
+     * @return
      */
     public Matrix inverse() {
         int[] dim = dim();
@@ -410,5 +434,17 @@ public class Matrix {
         m2.augment(Identity(3), true).reduce().print();
         m2.inverse().print();
         m2.print();
+    }
+
+    public double dotproduct(double[] array1, double[] array2) {
+        int rows = array1.length;
+        int cols = array2.length;
+        double result = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result += array1[i] * array2[j];
+            }
+        }
+        return result;
     }
 }

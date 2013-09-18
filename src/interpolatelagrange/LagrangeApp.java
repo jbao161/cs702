@@ -39,21 +39,36 @@ public class LagrangeApp extends javax.swing.JFrame {
 
     public void hardInit() {
         double[] intensity = {
-            201702.5,
-            214761.3,
-            103005.3,
-            49700.7,
-            14995.3,
-            4202.9,
-            3185.3};
+            0.001,
+            0.003,
+            0.0055,
+            0.01,
+            0.03,
+            0.072,
+            0.139,
+            0.1,
+            0.24,
+            0.2,
+            0.3,
+            0.469,
+            0.4,
+            0.5
+        };
         double[] concentration = {
-            50000.0,
-            25000.0,
-            6250.0,
-            1562.5,
-            390.6,
-            97.7,
-            48.8
+            1.81945517,
+            1.84768883,
+            1.85922616,
+            1.87857847,
+            1.94678403,
+            2.04153268,
+            2.11669564,
+            2.10190186,
+            2.20970561,
+            2.18723323,
+            2.40119457,
+            2.3130484,
+            2.34998155,
+            2.38172234
         };
         int numDataPts = intensity.length;
         data = new double[numDataPts][2];
@@ -209,6 +224,7 @@ public class LagrangeApp extends javax.swing.JFrame {
         loadData();
         setPolynomial();
         drawGraph();
+        px.save_data(-1,1,10,"interpolatedplotdata.txt");
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

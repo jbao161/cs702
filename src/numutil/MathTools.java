@@ -13,6 +13,14 @@ import java.util.Arrays;
  */
 public class MathTools {
 
+    public static double[] Copy(double[] array) {
+        double[] result = new double[array.length];
+        for (int i = 0; i < array.length; i++) {
+            result[i] = array[i];
+        }
+        return result;
+    }
+
     public static int sign(double value) {
         if (Double.isNaN(value)) {
             throw new ArithmeticException("invalid input: " + value + " is not a number");
@@ -105,13 +113,15 @@ public class MathTools {
         }
         return result;
     }
-/**
- * calculates the expected return from a random buying game
- * @param iterations how many times you resell your unwanted purchases
- * @param successRate chance of getting the purchase you want
- * @param sellRate the percent return from selling a purchase you don't want
- * @return 
- */
+
+    /**
+     * calculates the expected return from a random buying game
+     *
+     * @param iterations how many times you resell your unwanted purchases
+     * @param successRate chance of getting the purchase you want
+     * @param sellRate the percent return from selling a purchase you don't want
+     * @return
+     */
     public static double returnRate(int iterations, double successRate, double sellRate) {
         double earnings = successRate;
         double reinvestment = 1 - earnings;
@@ -120,9 +130,13 @@ public class MathTools {
             cash = reinvestment * sellRate;
             earnings += cash * successRate;
             reinvestment = cash * (1 - successRate);
-            System.out.println("cash: "+cash);
-            System.out.println("resell earnings: "+ cash*successRate);
+            System.out.println("cash: " + cash);
+            System.out.println("resell earnings: " + cash * successRate);
         }
         return earnings;
+    }
+    
+    public static void print(double[] array){
+        System.out.println(Arrays.toString(array));
     }
 }

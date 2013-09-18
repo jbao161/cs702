@@ -4,6 +4,7 @@
  */
 package numutil;
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -244,7 +245,7 @@ public class Polynomial extends TreeMap<Double, Double> {
                 return differentiate(1).evaluate(x);
             }
         };
-        Object[] params = new Object[] {poly, new double[] {lowerBound, upperBound}, new double[]{}};
+        Object[] params = new Object[]{poly, new double[]{lowerBound, upperBound}, new double[]{}};
         return bisection.solve(params);
     }
 
@@ -355,5 +356,19 @@ public class Polynomial extends TreeMap<Double, Double> {
         ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
         dataSets.add(createPlot(logBase, min, max));
         return numutil.Plot.plot(toText(), dataSets, visible);
+    }
+
+    public void save_data(double x0, double x1, int num_of_points, String filename) {
+        double increment = (x1 - x0) / num_of_points;
+        System.out.println(increment);
+        try {
+            FileWriter writer = new FileWriter(filename);
+            for (double x = x0; x <= x1; x += increment) {
+                writer.append(x + "," + this.evaluate(x) + "\r\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+        }
     }
 }
