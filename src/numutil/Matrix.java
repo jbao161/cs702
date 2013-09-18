@@ -71,7 +71,7 @@ public class Matrix {
         this.array = array;
     }
 
-    public  Matrix(double[] s_array) {
+    public Matrix(double[] s_array) {
         double[][] matrix = new double[s_array.length][1];
         for (int i = 0; i < s_array.length; i++) {
             matrix[i][0] = s_array[i];
@@ -162,6 +162,19 @@ public class Matrix {
         System.out.println(dim[0] + "x" + dim[1] + " matrix");
         for (int i = 0; i < dim[0]; i++) {
             System.out.println(Arrays.toString(array[i]));
+        }
+    }
+
+    public void printdata() {
+        int[] dim = dim();
+        String entry;
+        System.out.println(dim[0] + "x" + dim[1] + " matrix");
+        for (int i = 0; i < dim[0]; i++) {
+            entry = "";
+            for (int j = 0; j < dim[1]; j++) {
+                entry += array[i][j] + ",";
+            }
+            System.out.println(entry);
         }
     }
 
