@@ -135,8 +135,21 @@ public class MathTools {
         }
         return earnings;
     }
-    
-    public static void print(double[] array){
+
+    public static void print(double[] array) {
         System.out.println(Arrays.toString(array));
+    }
+
+    public static void printdata(double[] array) {
+        String str_out = "";
+        for (int i = 0; i < array.length; i++) {
+            str_out += array[i] + ",";
+        }
+        System.out.println(str_out);
+    }
+    public static void printelements(double[] array){
+          for (int i = 0; i < array.length; i++) {
+              System.out.println(array[i]);
+        };
     }
 }
