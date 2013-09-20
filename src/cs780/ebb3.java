@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package main;
+package cs780;
 
 import numutil.Matrix;
 import function.FunctionModel;
@@ -11,7 +11,7 @@ import function.FunctionModel;
  *
  * @author jbao
  */
-public class csi780_ebb3 {
+public class ebb3 {
 
     public static boolean DEBUG = true;
     public static int max_iter = (int) 1e3;

@@ -26,11 +26,40 @@ public class ebb4 {
      */
     public static void main(String[] args) {
         double[][] data = read_in("ebb4data.csv");
-        System.out.println(Arrays.deepToString(data));
-        Matrix printer = new Matrix(data);
-        printer.printdata();
-    }
+        data = clean(data);
+        //System.out.println(Arrays.deepToString(data));
+        //Matrix printer = new Matrix(data);
+        //printer.printdata();
+        function.FunctionModel morse = new function.FunctionModel() {
+            @Override
+            public double compute(double input, double[] params) {
+                double alpha = params[0];
+                double beta = params[1];
+                double gamma = params[2];
+                double eterm = Math.exp(-1 * beta * (input - gamma));
+                return alpha * Math.pow(eterm - 1, 2) - alpha;
+            }
 
+            @Override
+            public double dcompute(int derivative, double input, double[] params) {
+                return Double.NaN;
+            }
+        };
+        double[] params = {1, 1, 1};
+        double[] params_fit = cs780.LM.nl_fit(morse, params, data);
+        for (double x = -5; x < 5; x++) {
+            System.out.println(morse.compute(x, params_fit));
+        }
+    }
+public static double[][] clean(double[][] data){
+    double[][] result = new double[data.length][2];
+    for (int i =0; i < data.length; i ++){
+        result[i] = new double[2];
+        result[i][0] = data[i][1]-data[i][0];
+        result[i][1] = data[i][2];
+    }
+    return result;
+}
     public static double[][] read_in(String filepath) {
         double[][] result = new double[0][];
         ArrayList<Double[]> resultal = new ArrayList<Double[]>();
