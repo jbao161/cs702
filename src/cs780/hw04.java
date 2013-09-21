@@ -8,7 +8,9 @@ import function.FunctionModel;
 import java.util.Arrays;
 
 /**
- *
+ * using the assigned matlab style algorithm as presented by Devries Hasbun.
+ * had to add modifications on top of original functions to make a least squares fit
+ * comments explain what Devries Hasbun did and do not reflect author's choice for coding!
  * @author jbao
  */
 public class hw04 {
@@ -72,7 +74,9 @@ public class hw04 {
         sse = LSE(curve, params, data);
         sse_m = sse;
         for (int j = 0; j < max_iter; j++) {
+            // for each parameter find its next estimate
             for (int i = 0; i < psize; i++) {
+                // change only one parameter at a time
                 for (int k = 0; k < psize; k++) {
                     if (k == i) {
                         a_plus[i] = params[i] + stepsize[i];
@@ -82,11 +86,13 @@ public class hw04 {
                         a_minus[k] = params[k];
                     }
                 }
+                // evaluate the SSE as one parameter varies
                 sse_p = LSE(curve, a_plus, data);
                 sse = LSE(curve, params, data);
                 sse_m = LSE(curve, a_minus, data);
-
+                // approximate derivative in SSE w\r to parameters with central difference
                 params[i] = params[i] - 0.5 * stepsize[i] * (sse_p - sse_m) / (sse_p - 2 * sse + sse_m);
+                // take smaller steps in blind hope for convergence
                 stepsize[i] = 0.5 * stepsize[i];
             }
         }
