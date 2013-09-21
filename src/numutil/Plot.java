@@ -4,13 +4,13 @@
  */
 package numutil;
 
+import function.FunctionModel;
 import java.awt.Color;
 import java.util.ArrayList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
@@ -82,5 +82,41 @@ public class Plot {
 
 
         return plot(title, oneXYSet, visible);
+    }
+
+    public static XYSeries createPlot(FunctionModel function, double[] params, double logBase, double min, double max) {
+
+        // curve pts
+        double xmin = MathTools.logBase(logBase, min);
+        double xmax = MathTools.logBase(logBase, max);
+        double numCurvePts = 10e3;
+        double increment = (xmax - xmin) / numCurvePts;
+        double xMarker;
+        double yMarker;
+        XYSeries curveSeries = new XYSeries("Y = F(x)");
+        for (int i = 0; i < numCurvePts; i++) {
+            if (logBase != 0) {
+                xMarker = Math.pow(logBase, xmin + increment * i);
+            } else {
+                xMarker = xmin + increment * i;
+            }
+            yMarker = function.compute(xMarker,params);
+            curveSeries.add(MathTools.logBase(logBase, xMarker), MathTools.logBase(logBase, yMarker));
+        }
+
+        return curveSeries;
+    }
+    
+   public static ChartPanel plot(FunctionModel function, double[] params,double logBase, double min, double max, boolean visible) {
+        ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
+        dataSets.add(createPlot(function, params,logBase, min, max));
+        return numutil.Plot.plot("Title", dataSets, visible);
+    }
+    public static ChartPanel plot_datafit(FunctionModel function, double[] params, double[][] data, double logBase, double min, double max, boolean visible) {
+        ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
+        dataSets.add(createPlot(function, params,logBase, min, max));
+        XYSeries datapoints = new XYSeries(true);
+        dataSets.add(create2DPlotData(data,datapoints));
+        return numutil.Plot.plot("Title", dataSets, visible);
     }
 }

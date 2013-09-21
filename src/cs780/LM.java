@@ -6,6 +6,7 @@ package cs780;
 
 import numutil.Matrix;
 import function.FunctionModel;
+import java.util.Arrays;
 
 /**
  *
@@ -15,10 +16,9 @@ public class LM {
 
     public static boolean DEBUG = true;
     public static int max_iter = (int) 1e3;
-    public static double TOL = 5e-9;
+    public static double TOL = 5e-12;
 
     public static void main(String[] args) {
-      
     }
 
     public static double get_sse(FunctionModel function, double[] params, double[][] data) {
@@ -41,12 +41,12 @@ public class LM {
     }
 
     public static double[] nl_fit(FunctionModel function, double[] params, double[][] data) {
-        double dx = 0.01;
-        int itersub_max = 1000;
+        double dx = 0.001;
+        int itersub_max = (int) 1e5;
         int iter;
         double[] params_prev = params;
         double[] params_next;
-        double lambda = .001;
+        double lambda = .01;
         double sse_prev, sse_next;
         sse_prev = get_sse(function, params_prev, data);
 
@@ -55,41 +55,41 @@ public class LM {
             double[] residuals = get_residuals(function, params_prev, data);
             // 1. approximate the jacobian
             double[][] jacobian = get_jacobian(function, params_prev, dx, data);
-            //Matrix printer = new Matrix(jacobian);
-            // printer.print();
+            // Matrix printer = new Matrix(jacobian);
+            //printer.print();
             // 2. get the new params
             params_next = get_updatedparams(jacobian, params_prev, lambda, residuals);
+            //System.out.println("pnext: "+Arrays.toString(params_next));
             // printer = new Matrix(dx);
             //printer.print();
             sse_next = get_sse(function, params_next, data);
-            
+            System.out.println("next jacobian sse_next:" + sse_next);
             iter = 0;
-            while (sse_next >= sse_prev) {
+            while (sse_next > sse_prev) {
                 iter++;
-                if (iter >= itersub_max) {
-                    return null;
-                }
                 lambda *= 10;
-
                 params_next = get_updatedparams(jacobian, params_prev, lambda, residuals);
-                //numutil.MathTools.print(params_next);
+                numutil.MathTools.print(params_next);
                 sse_next = get_sse(function, params_next, data);
-                //System.out.println("sse_next: "+ sse_next + "\n");
+                System.out.println("lambda loop sse_next: " + sse_next + "\n");
             }
 
             lambda /= 10;
-            int flag = 0;
+            int flag = 0; // if all the parameters match TOL, return the next parameter
             for (int k = 0; k < params.length; k++) {
-                if (Math.abs(params_next[k] - params_prev[k]) / params_prev[k] < TOL) {
+                if (Math.abs(params_next[k] - params_prev[k]) < TOL) {
                     flag++;
                 }
             }
             if (flag == params.length) {
                 return params_next;
             }
+
+            System.out.println(i + "," + sse_next + "," + params_next[0] + "," + params_next[1] + "," + params_next[2]);
             sse_prev = sse_next;
             params_prev = params_next;
-            System.out.println(i+","+sse_next+","+params_next[0]+","+params_next[1]+","+params_next[2]);
+            numutil.MathTools.print(params_next);
+            System.out.println("");
         }
         return null;
     }
@@ -142,6 +142,10 @@ public class LM {
                 diff_y = residual - residual_p; // positive direction is towards minimizing residual
                 diff_p = dx[j] - params[j];
                 jacobian[i][j] = diff_y / diff_p;
+                // prevent divide by zero
+                if (jacobian[i][j] == 0) {
+                    jacobian[i][j] = 1e-15;
+                }
             }
         }
 
