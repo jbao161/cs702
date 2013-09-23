@@ -107,6 +107,7 @@ public class LM2 {
         Matrix jacobiM = new Matrix(jacobian);
         Matrix jacobiT = jacobiM.transpose();
         Matrix H = jacobiT.multiply(jacobiM);
+        H.print();
         Matrix w = new Matrix(residuals);
         Matrix gradient = jacobiT.multiply(w);
         Matrix m1 = new Matrix(Matrix.Diagonal(H.array));

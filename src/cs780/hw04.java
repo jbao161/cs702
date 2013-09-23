@@ -6,6 +6,7 @@ package cs780;
 
 import function.FunctionModel;
 import java.util.Arrays;
+import numutil.Matrix;
 
 /**
  * using the assigned matlab style algorithm as presented by Devries Hasbun. had
@@ -73,10 +74,30 @@ public class hw04 {
 //        numutil.Plot.plot_datafit(curve, init_params, data, 0, 435.7, 436, true);
 
         init_params = new double[]{434.83537392666886, 0.03108379107191143, 149.70548215717258, 23.301493572735644};
-        //params = LM2.nl_fit(curve, init_params, data);
+        
+        curve = new function.FunctionModel() {
+            @Override
+            public double compute(double input, double[] params) {
+                double A = params[0];
+                double B = params[1];
+                double C = params[2];
+                double D = params[3];
+                double denom = 1 + 4 * Math.pow(input - A, 2) / Math.pow(B, 2);
+                double result = D + C / denom;
+                return result;
+            }
+
+            @Override
+            public double dcompute(int derivative, double input, double[] params) {
+                return Double.NaN;
+            }
+        };
         //numutil.MathTools.printdata(params);
-        params = newton(curve, init_params, init_step, data);
-        numutil.Plot.plot_datafit(curve, params, data, 0, 435.7, 436, true);
+        double[][] hessian = newton(curve, init_params, init_step, data);
+        Matrix printer = new Matrix(hessian);
+        printer.print();
+        numutil.Plot.plot_datafit(curve, init_params, data, 0, 435.7, 436, true);
+        params = LM2.nl_fit(curve, init_params, data); 
     }
 
     public static double[] crude(FunctionModel curve, double[] prev_params, double[] stepsize, double[][] data) {
@@ -112,7 +133,7 @@ public class hw04 {
         return prev_params;
     }
 
-    public static double[] newton(FunctionModel function, double[] params, double[] step, double[][] data) {
+    public static double[][] newton(FunctionModel function, double[] params, double[] step, double[][] data) {
         int psize = params.length;
         double[] ap = new double[psize];
         double[] am = new double[psize];
@@ -147,14 +168,16 @@ public class hw04 {
                     amp[j] = params[j] + step[j];
                     amm[i] = params[i] - step[i];
                     amm[j] = params[j] - step[j];
-                    double term1 = (LSE(function,app,data)-LSE(function,apm,data))/(2*step[j]);
-                    double term2 = (LSE(function, amp, data) - LSE(function, amm, data))/(2*step[j]);
-                    hessian[i][j] = term1 - term2/(2*step[i]);
+                    double term1 = (LSE(function, app, data) - LSE(function, apm, data)) / (2 * step[j]);
+                    double term2 = (LSE(function, amp, data) - LSE(function, amm, data)) / (2 * step[j]);
+                    hessian[i][j] = term1 - term2 / (2 * step[i]);
                     hessian[j][i] = hessian[i][j];
                 }
             }
         }
-        return params;
+        Matrix h = new Matrix(hessian);
+        hessian = h.inverse().array;
+        return hessian;
     }
 
     public static double[] crude2(FunctionModel curve, double[] params, double[] stepsize, double[][] data) {
