@@ -12,11 +12,11 @@ import java.util.Arrays;
  *
  * @author jbao
  */
-public class LM {
+public class LM2 {
 
     public static boolean DEBUG = true;
     public static int max_iter = (int) 1e3;
-    public static double TOL = 5e-12;
+    public static double TOL = 5e-3;
 
     public static void main(String[] args) {
     }
@@ -41,7 +41,7 @@ public class LM {
     }
 
     public static double[] nl_fit(FunctionModel function, double[] params, double[][] data) {
-        double dx = 0.01;
+        double[] dx = {0.001, 1, 1, 1};
         int itersub_max = (int) 1e5;
         int iter;
         double[] params_prev = params;
@@ -49,19 +49,18 @@ public class LM {
         double lambda = .01;
         double sse_prev, sse_next;
         sse_prev = get_sse(function, params_prev, data);
+        System.out.println("sse_prev first:" + sse_prev);
 
         for (int i = 1; i < max_iter; i++) {
             //System.out.println("sse_prev: " + sse_prev + "\n");
             double[] residuals = get_residuals(function, params_prev, data);
             // 1. approximate the jacobian
             double[][] jacobian = get_jacobian(function, params_prev, dx, data);
-            // Matrix printer = new Matrix(jacobian);
-            //printer.print();
+            Matrix printer = new Matrix(jacobian);
+            printer.print();
             // 2. get the new params
             params_next = get_updatedparams(jacobian, params_prev, lambda, residuals);
-            //System.out.println("pnext: "+Arrays.toString(params_next));
-            // printer = new Matrix(dx);
-            //printer.print();
+            System.out.println("pnext: " + Arrays.toString(params_next));
             sse_next = get_sse(function, params_next, data);
             System.out.println("next jacobian sse_next:" + sse_next);
             iter = 0;
@@ -74,7 +73,7 @@ public class LM {
                 System.out.println("lambda loop sse_next: " + sse_next + "\n");
             }
 
-           lambda /= 10;
+            lambda /= 10;
             int flag = 0; // if all the parameters match TOL, return the next parameter
             for (int k = 0; k < params.length; k++) {
                 if (Math.abs(params_next[k] - params_prev[k]) < TOL) {
@@ -117,12 +116,12 @@ public class LM {
         m1 = m1.multiply(gradient);
         double[] result = new double[params.length];
         for (int i = 0; i < result.length; i++) {
-            result[i] = params[i] - m1.array[i][0];
+            result[i] = params[i] + m1.array[i][0];
         }
         return result;
     }
 
-    public static double[][] get_jacobian(FunctionModel function, double[] params, double step_size, double[][] data) {
+    public static double[][] get_jacobian(FunctionModel function, double[] params, double[] step_size, double[][] data) {
         int num_datapts = data.length;
         int num_params = params.length;
         double[][] jacobian = new double[num_datapts][num_params];
@@ -135,9 +134,10 @@ public class LM {
             data_x = data[i][0];
             data_y = data[i][1];
             residual = Math.abs(data_y - function.compute(data_x, params));
+            double[] a_plus = new double[num_params], a_minus = new double[num_params];
             for (int j = 0; j < num_params; j++) {
                 double[] dx = numutil.MathTools.Copy(params);
-                dx[j] += params[j] * step_size;
+                dx[j] += params[j] + step_size[j];
                 residual_p = Math.abs(data_y - function.compute(data_x, dx));
                 diff_y = residual - residual_p; // positive direction is towards minimizing residual
                 diff_p = dx[j] - params[j];
