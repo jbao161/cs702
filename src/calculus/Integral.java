@@ -187,7 +187,7 @@ public class Integral {
     public static void romberg(int n, double x1, double x2, FunctionModel fx, double[] equationParams) {
         //step1
         double h = x2 - x1;
-        double[][] R = new double[2][2];
+        double[][] R = new double[2][n];
         R[0][0] = 0.5 * h * (fx.compute(x1, equationParams) + fx.compute(x2, equationParams));
         // step 2
         System.out.println(R[0][0]);
@@ -205,7 +205,7 @@ public class Integral {
             }
             // step 6
             for (int j = 0; j < 2; j++) {
-                System.out.println(R[2][j]);
+                System.out.println(R[1][j]);
             }
             // step 7
             h = 0.5 * h;
