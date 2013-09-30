@@ -19,7 +19,7 @@ import numutil.Matrix;
 public class hw04 {
 
     public static double TOL = 1e-1;
-    public static int max_iter = (int) 1000;
+    public static int max_iter = (int) 50;
 
     public static void main(String[] args) {
         function.FunctionModel curve = new function.FunctionModel() {
@@ -67,37 +67,22 @@ public class hw04 {
         double[] init_step = new double[]{0.01, 0.005, 4.0, 2.0};
         double[] params;
 
-//        for (int i = 0; i < max_iter; i++) {
-//            init_params = crude(curve, init_params, init_step, data);
-//            numutil.MathTools.printdata(init_params);
-//        }
-//        numutil.Plot.plot_datafit(curve, init_params, data, 0, 435.7, 436, true);
+        for (int i = 0; i < max_iter; i++) {
+            init_params = crude(curve, init_params, init_step, data);
+            numutil.MathTools.printdata(init_params);
+        }
+        double[] plotparams = new double[]{
+            435.8354122965868, 0.029848660860493616, 149.70774217847804, 25.089274089348063};
+        numutil.Plot.plot_datafit(curve, plotparams, data, 0, 435.7, 436, true);
 
-        init_params = new double[]{434.83537392666886, 0.03108379107191143, 149.70548215717258, 23.301493572735644};
-        
-        curve = new function.FunctionModel() {
-            @Override
-            public double compute(double input, double[] params) {
-                double A = params[0];
-                double B = params[1];
-                double C = params[2];
-                double D = params[3];
-                double denom = 1 + 4 * Math.pow(input - A, 2) / Math.pow(B, 2);
-                double result = D + C / denom;
-                return result;
-            }
+        //init_params = new double[]{434.83537392666886, 0.03108379107191143, 149.70548215717258, 23.301493572735644};
 
-            @Override
-            public double dcompute(int derivative, double input, double[] params) {
-                return Double.NaN;
-            }
-        };
         //numutil.MathTools.printdata(params);
-        double[][] hessian = newton(curve, init_params, init_step, data);
-        Matrix printer = new Matrix(hessian);
-        printer.print();
-        numutil.Plot.plot_datafit(curve, init_params, data, 0, 435.7, 436, true);
-        params = LM2.nl_fit(curve, init_params, data); 
+        //double[][] hessian = newton(curve, init_params, init_step, data);
+        //Matrix printer = new Matrix(hessian);
+        //printer.print();
+        //numutil.Plot.plot_datafit(curve, init_params, data, 0, 435.7, 436, true);
+        ///params = LM2.nl_fit(curve, init_params, data); 
     }
 
     public static double[] crude(FunctionModel curve, double[] prev_params, double[] stepsize, double[][] data) {
@@ -106,7 +91,8 @@ public class hw04 {
         double sse_p, sse_m, sse;
         sse = LSE(curve, prev_params, data);
         sse_m = sse;
-
+        double[] save = new double[psize];
+        double savesse = sse;
         // for each parameter find its next estimate
         for (int i = 0; i < psize; i++) {
             // change only one parameter at a time
@@ -124,12 +110,18 @@ public class hw04 {
             sse = LSE(curve, prev_params, data);
             sse_m = LSE(curve, a_minus, data);
             // approximate derivative in SSE w\r to parameters with central difference
+            save[i] = prev_params[i];
             prev_params[i] = prev_params[i] - 0.5 * stepsize[i] * (sse_p - sse_m) / (sse_p - 2 * sse + sse_m);
+
             // take smaller steps in blind hope for convergence
-            //stepsize[i] = 0.5 * stepsize[i];
+            stepsize[i] = 0.5 * stepsize[i];
         }
-
-
+        double testsse = LSE(curve, prev_params, data);
+        if (testsse > savesse) {
+            prev_params = save;
+            return prev_params;
+        }
+        System.out.println("sse:" + sse);
         return prev_params;
     }
 

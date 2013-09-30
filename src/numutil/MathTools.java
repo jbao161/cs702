@@ -147,9 +147,18 @@ public class MathTools {
         }
         System.out.println(str_out);
     }
-    public static void printelements(double[] array){
-          for (int i = 0; i < array.length; i++) {
-              System.out.println(array[i]);
+
+    public static void printelements(double[] array) {
+        for (int i = 0; i < array.length; i++) {
+            System.out.println(array[i]);
         };
+    }
+
+    public static double[] trim(double[][] array) {
+        double[] result = new double[array.length];
+        for (int i = 0; i < array.length; i++) {
+            result[i] = array[i][0];
+        }
+        return result;
     }
 }

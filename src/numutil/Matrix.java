@@ -273,6 +273,18 @@ public class Matrix {
         return solve(false);
     }
 
+    public Matrix solve(double[] array, boolean print) {
+        Matrix result = this.inverse().multiply(new Matrix(array));
+        if (print) {
+            result.print();
+        }
+        return result;
+    }
+
+    public Matrix solve(double[] array) {
+        return solve(array, false);
+    }
+
     /**
      * Creates a matrix of a n_x_n square matrix augmented with the n_x_n
      * identity.
@@ -459,5 +471,62 @@ public class Matrix {
             }
         }
         return result;
+    }
+
+    public Matrix[] LUdoolittle() {
+        Matrix[] result = new Matrix[2];
+        int rows = dim()[1];
+        int cols = dim()[0];
+        double[][] lower = new double[rows][cols];
+        // make lower matrix have ones in diagonal
+        for (int i = 0; i < rows; i++) {
+            lower[i][i] = 1;
+            for (int j = i + 1; j < cols; j++) {
+                lower[i][j] = 0;
+            }
+        }
+        double[][] upper = new double[rows][cols];
+        double alpha;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < i; j++) {
+                alpha = array[i][j];
+                for (int k = 0; k < j; k++) {
+                    alpha = alpha - lower[i][k] * upper[k][j];
+                }
+                lower[i][j] = alpha / upper[j][j];
+            }
+            for (int j = i; j < rows; j++) {
+                alpha = array[i][j];
+                for (int k = 0; k < i; k++) {
+                    alpha = alpha - lower[i][k] * upper[k][j];
+                }
+                upper[i][j] = alpha;
+            }
+        }
+
+        Matrix ml = new Matrix(lower);
+//        ml.print();
+        Matrix mu = new Matrix(upper);
+//        mu.print();
+        result[0] = ml;
+        result[1] = mu;
+        return result;
+    }
+
+    public double det(boolean print) {
+        Matrix[] lu = LUdoolittle();
+        double[][] upperm = lu[1].array;
+        double result = 1;
+        for (int i = 0; i < upperm.length; i++) {
+            result *= upperm[i][i];
+        }
+        if (print) {
+            System.out.println("det of " + dim()[0] + "x" + dim()[1] + " matrix: " + result);
+        }
+        return result;
+    }
+
+    public double det() {
+        return det(false);
     }
 }

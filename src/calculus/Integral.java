@@ -13,12 +13,14 @@ import numutil.Polynomial;
  * @author jbao
  */
 public class Integral {
+
     /**
      * Newton-Cotes integration formula for (n+1) points. uses Lagrange
      * interpolating polynomial to approximate the integral. uses the end points
      * of the specified domain interval.
      *
-     * @param useEndPoints true = closed formula, includes end points. false = open formula, use only interior points.
+     * @param useEndPoints true = closed formula, includes end points. false =
+     * open formula, use only interior points.
      * @param n the order of the formula
      * @param x1 lower bound of integration domain
      * @param x2 upper bound of integration domain
@@ -180,5 +182,38 @@ public class Integral {
         double stepSize = (x2 - x1) / n;
 
         return Double.NaN;
+    }
+
+    public static void romberg(int n, double x1, double x2, FunctionModel fx, double[] equationParams) {
+        //step1
+        double h = x2 - x1;
+        double[][] R = new double[2][2];
+        R[0][0] = 0.5 * h * (fx.compute(x1, equationParams) + fx.compute(x2, equationParams));
+        // step 2
+        System.out.println(R[0][0]);
+        // step 3
+        for (int i = 1; i < n; i++) {
+            // step 4 (approximation from Trapezoidal method)
+            double sum01 = 0;
+            for (int k = 0; k < Math.pow(2, i - 2); k++) {
+                sum01 += fx.compute(x1 + (k - 0.5) * h, equationParams);
+            }
+            R[1][0] = 0.5 * (R[0][0] + h * sum01);
+            // step 5 (extrapolation)
+            for (int j = 1; j < i; j++) {
+                R[1][j] = R[1][j - 1] + (R[1][j - 1] - R[0][j - 1]) / (Math.pow(4, j - 1) - 1);
+            }
+            // step 6
+            for (int j = 0; j < 2; j++) {
+                System.out.println(R[2][j]);
+            }
+            // step 7
+            h = 0.5 * h;
+            // step 8 (update row 1 of R)
+            for (int j = 0; j < i; j++) {
+                R[0][j] = R[1][j];
+            }
+        }
+
     }
 }

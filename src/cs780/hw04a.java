@@ -22,7 +22,7 @@ public class hw04a {
     public static int max_iter = (int) 1000;
 
     public static void main(String[] args) {
-        function.FunctionModel curve = new function.FunctionModel() {
+        function.FunctionModel function = new function.FunctionModel() {
             @Override
             public double compute(double input, double[] params) {
                 double A = params[0];
@@ -63,12 +63,12 @@ public class hw04a {
             {435.879, 46.0},
             {435.884, 41.0}};
 
-        double[] init_params = new double[]{435.84, 0.03, 120.0, 40.0};
-        double[] init_step = new double[]{0.01, 0.005, 4.0, 2.0};
-        double[] params;
+        double[] params = new double[]{435.84, 0.03, 120.0, 40.0};
+        double[] step = new double[]{0.01, 0.005, 4.0, 2.0};
+
+        newton(function, params, step, data);
 
     }
-
 
     public static double[][] newton(FunctionModel function, double[] params, double[] step, double[][] data) {
         int psize = params.length;
@@ -114,9 +114,13 @@ public class hw04a {
         }
         Matrix h = new Matrix(hessian);
         hessian = h.inverse().array;
+        Matrix dd = new Matrix(pderiv(function, params, step, data));
+        dd.print();
+        h= h.inverse();
+        h.multiply(dd).print();
+
         return hessian;
     }
-
 
     public static double LSE(FunctionModel curve, double[] params, double[][] data) {
         double SSE = 0;
@@ -129,5 +133,38 @@ public class hw04a {
         }
         return SSE;
     }
-}
 
+    public static double[] pderiv(FunctionModel curve, double[] prev_params, double[] stepsize, double[][] data) {
+        int psize = prev_params.length;
+        double[] a_plus = new double[psize], a_minus = new double[psize];
+        double[] deriv = new double[psize];
+        double sse_p, sse_m, sse;
+        sse = LSE(curve, prev_params, data);
+        sse_m = sse;
+
+        // for each parameter find its next estimate
+        for (int i = 0; i < psize; i++) {
+            // change only one parameter at a time
+            for (int k = 0; k < psize; k++) {
+                if (k == i) {
+                    a_plus[i] = prev_params[i] + stepsize[i];
+                    a_minus[i] = prev_params[i] - stepsize[i];
+                } else {
+                    a_plus[k] = prev_params[k];
+                    a_minus[k] = prev_params[k];
+                }
+            }
+            // evaluate the SSE as one parameter varies
+            sse_p = LSE(curve, a_plus, data);
+            sse = LSE(curve, prev_params, data);
+            sse_m = LSE(curve, a_minus, data);
+            // approximate derivative in SSE w\r to parameters with central difference
+            deriv[i] = -0.5 * (sse_p - sse_m) / (sse_p - 2 * sse + sse_m);
+            // take smaller steps in blind hope for convergence
+            //stepsize[i] = 0.5 * stepsize[i];
+        }
+
+
+        return deriv;
+    }
+}
