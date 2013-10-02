@@ -100,31 +100,32 @@ public class Plot {
             } else {
                 xMarker = xmin + increment * i;
             }
-            yMarker = function.compute(xMarker,params);
+            yMarker = function.compute(xMarker, params);
             curveSeries.add(MathTools.logBase(logBase, xMarker), MathTools.logBase(logBase, yMarker));
         }
 
         return curveSeries;
     }
-    
-   public static ChartPanel plot(FunctionModel function, double[] params,double logBase, double min, double max, boolean visible) {
+
+    public static ChartPanel plot(FunctionModel function, double[] params, double logBase, double min, double max, boolean visible) {
         ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
-        dataSets.add(createPlot(function, params,logBase, min, max));
+        dataSets.add(createPlot(function, params, logBase, min, max));
         return numutil.Plot.plot("Title", dataSets, visible);
     }
+
     public static ChartPanel plot_datafit(FunctionModel function, double[] params, double[][] data, double logBase, double min, double max, boolean visible) {
         ArrayList<XYSeries> dataSets = new ArrayList<XYSeries>();
-        dataSets.add(createPlot(function, params,logBase, min, max));
+        dataSets.add(createPlot(function, params, logBase, min, max));
         XYSeries datapoints = new XYSeries(true);
-        dataSets.add(create2DPlotData(data,datapoints));
+        dataSets.add(create2DPlotData(data, datapoints));
         return numutil.Plot.plot("Title", dataSets, visible);
     }
+
+    public static void plotdata(FunctionModel function, double[] params, double increment, double min, double max, boolean visible) {
+        double fx;
+        for (double i = min; i < max+increment; i += increment) {
+            fx = function.compute(i, params);
+            System.out.println(i + "," + fx);
+        }
+    }
 }
-
-
-
-
-
-
-
-

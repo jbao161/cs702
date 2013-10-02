@@ -5,7 +5,6 @@
 package cs780;
 
 import calculus.AdaptiveQuadrature;
-import calculus.Integral;
 import function.FresnelC;
 import function.FresnelS;
 import function.FunctionModel;
@@ -19,7 +18,8 @@ public class hw05 {
 
     static class Integrand implements FunctionModel {
 
-        public double compute(double x, double[] equationParams) {
+        public double compute(double input, double[] equationParams) {
+            double x = input;
             double k = equationParams[0];
             return 1.0 / Math.sqrt(1 - Math.pow(k, 2) * Math.pow(Math.sin(x), 2));
         }
@@ -28,7 +28,7 @@ public class hw05 {
             return Double.NaN;
         }
     }
-    public static double TOL = 1e-5;
+    public static double TOL = 1e-15;
 
     public static void main(String[] args) {
 
@@ -37,16 +37,16 @@ public class hw05 {
         }
         if (false) { // exercise 4.6
             pendulum();
-            double[] equationParams = new double[]{1.0, 1.0, 1.0};
+        }
+    }
+
+    public static void testK() {
+        for (int i = 0; i < 9; i++) {
+            double[] equationParams = new double[]{Math.sin(i * Math.PI / 18), 1.0, 1.0};
             Integrand ig = new Integrand();
-            double kterm = Integral.newtoncotes(false, 19, 0.0, Math.PI / 2, ig, equationParams);
+            double kterm;
+            kterm = AdaptiveQuadrature.aq2(0.0, Math.PI / 2.0, ig, equationParams, TOL, 1000);
             System.out.println(kterm);
-//            for (int i = 0; i < 5; i++) {
-//                kterm = ig.compute(i, equationParams);
-//                       System.out.println(kterm);
-//            }
-//            kterm = ig.compute(Math.PI/2-0.001, equationParams);
-//                       System.out.println(kterm);
         }
         if (true) { // exercise 4.12
             Polynomial pos = numutil.LegendrePolynomial.derivDefinition(3);
@@ -144,23 +144,20 @@ public class hw05 {
     };
 
     public static void pendulum() {
-
-
+        double[] equationParams = new double[]{Double.NaN, 1.0, 9.8};
         FunctionModel period_function = new FunctionModel() {
             public double compute(double theta, double[] equationParams) {
                 double result = Double.NaN;
                 double start = 0.0;
-                double end = Math.PI * 0.49;
-                double k = equationParams[0];
+                double end = Math.PI * 0.5;
                 double length = equationParams[1];
                 double gravity = equationParams[2];
                 Integrand integrate_me = new Integrand();
-                double kterm = AdaptiveQuadrature.aq2(start, end, integrate_me, equationParams, TOL, 10000);
-                double deriv = (integrate_me.compute(Math.PI * 0.49, equationParams) - integrate_me.compute(Math.PI * 0.40 - 0.01, equationParams));
-                kterm += deriv;
-                System.out.println(kterm);
-                kterm = 1;
-                result = 4 * Math.sqrt(length / gravity) * kterm * Math.sin(theta / 2);
+                double kterm;
+                equationParams[0] = Math.sin(theta * 0.5);
+                kterm = AdaptiveQuadrature.aq2(0.0, Math.PI / 2.0, integrate_me, equationParams, TOL, 1000);
+                // System.out.println("kterm:"+kterm);
+                result = 4 * Math.sqrt(length / gravity) * kterm;
                 return result;
             }
 
@@ -168,11 +165,10 @@ public class hw05 {
                 return Double.NaN;
             }
         };
-        double[] period_params = {1, 1, 10};
-        double period = period_function.compute(Math.PI / 2, period_params);
-        System.out.println(period);
 
-
+        numutil.Plot.plotdata(period_function, equationParams, Math.PI/180, 0, Math.PI, true);
+//        double period = period_function.compute(3 * Math.PI / 18, equationParams);
+//        System.out.println(period);
     }
 
     public static void fresnel() {
