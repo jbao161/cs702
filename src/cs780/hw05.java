@@ -17,6 +17,8 @@ import numutil.Polynomial;
  */
 public class hw05 {
 
+  static  double[] null_params = new double[]{};
+
     static class Integrand implements FunctionModel {
 
         public double compute(double x, double[] equationParams) {
@@ -51,17 +53,76 @@ public class hw05 {
         if (false) { // exercise 4.12
             legendre();
         }
-        if (true) { // exercise 4.18
-            double[][] xpoints = new double[4][];
-            xpoints[0] = new double[]{0.58579, 3.4142};
-            xpoints[1] = new double[]{0.32255, 1.7458, 4.5366, 9.3951};
-            xpoints[2] = new double[]{0.22285, 1.1889, 2.9927, 5.37751, 9.8375, 1.5983};
-            xpoints[3] = new double[]{0.17028, 9.0370, 2.2511, 4.2667, 7.0459, 1.0759, 1.5741, 2.2863};
-            double[][] wpoints = new double[4][];
-            wpoints[0] = new double[]{0.853355, 0.14645};
-            wpoints[1] = new double[]{0.60315, 0.35742, 0.03889, 0.0005393};
-            wpoints[2] = new double[]{0.45896, 0.417, 0.113, 0.104, 0.000261, 0.000000899};
-            wpoints[3] = new double[]{0.369, 0.419, 0.1176, 0.0333, 0.00279, 0.00009, 0.00000085, 0.000000001};
+        if (false) { // exercise 4.18
+            blackbody();
+        }
+        if (true) { // exercise 4.22
+            doubleintegral();
+        }
+    }
+
+    public static void doubleintegral() {
+        FunctionModel y1 = new FunctionModel() {
+            public double compute(double input, double[] equationParams) {
+                return Math.pow(input, 3);
+            }
+
+            public double dcompute(int derivative, double input, double[] equationParams) {
+                return Double.NaN;
+            }
+        };
+        FunctionModel y2 = new FunctionModel() {
+            public double compute(double input, double[] equationParams) {
+                return Math.pow(input, 2);
+            }
+
+            public double dcompute(int derivative, double input, double[] equationParams) {
+                return Double.NaN;
+            }
+        };
+        FunctionModel integrand = new FunctionModel() {
+            public double compute(double input, double[] params) {
+                return Math.exp(params[1] / params[0]);
+            }
+
+            public double dcompute(int derivative, double input, double[] equationParams) {
+                return Double.NaN;
+            }
+        };
+        double integral =calculus.MultipleIntegral.simpsonsDouble(0.1, 0.5, 5, 5, y1, y2, integrand, null_params);
+        System.out.println(integral);
+    }
+
+    public static void blackbody() {
+        int num_points = 4;
+        double[][] xpoints = new double[num_points][];
+        xpoints[0] = new double[]{0.58579, 3.4142};
+        xpoints[1] = new double[]{0.322547689619, 1.74576110116, 4.53662029692, 9.3950709123};
+        xpoints[2] = new double[]{0.222846604179, 1.18893210167, 2.99273632606, 5.7751435691, 9.83746741838, 15.9828739806};
+        xpoints[3] = new double[]{0.170279632305, 0.903701776799, 2.25108662987, 4.26670017029, 7.04590540239, 10.7585160102, 15.7406786413, 22.8631317369};
+        double[][] wpoints = new double[num_points][];
+        wpoints[0] = new double[]{0.853355, 0.14645};
+        wpoints[1] = new double[]{0.603154104342, 0.357418692438, 0.038887908515, 0.00053929470556};
+        wpoints[2] = new double[]{0.45896467395, 0.417000830772, 0.113373382074, 0.0103991974531, 0.000261017202815, 8.9854790643 * Math.pow(10, -7)};
+        wpoints[3] = new double[]{0.369188589342, 0.418786780814, 0.175794986637, 0.0333434922612, 0.00279453623523, 9.07650877338 * Math.pow(10.0, -5.0), 8.48574671626 * Math.pow(10.0, -7.0), 1.04800117487 * Math.pow(10.0, -9.0)};
+
+        FunctionModel integrand = new FunctionModel() {
+            public double compute(double input, double[] equationParams) {
+                return Math.pow(input, 3) / (Math.exp(input) - 1);
+            }
+
+            public double dcompute(int derivative, double input, double[] equationParams) {
+                return Double.NaN;
+            }
+        };
+
+        for (int i = 0; i < num_points; i++) {
+            double integral = 0;
+            for (int j = 0; j < xpoints[i].length; j++) {
+                System.out.println(Math.exp(xpoints[i][j]) * wpoints[i][j]); // total weight
+                integral += Math.exp(xpoints[i][j]) * wpoints[i][j] * integrand.compute(xpoints[i][j], null_params);
+            }
+            System.out.println(integral);
         }
     }
 

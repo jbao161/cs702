@@ -54,6 +54,21 @@ public class MultipleIntegral {
         return result;
     }
 
+    /**
+     * does a double integral using gaussian quadrature
+     *
+     * @param a lower bound of outer integral, x
+     * @param b upper bound of outer integral, x
+     * @param m num of outer approximation points
+     * @param n num of inner approximation points
+     * @param bounds1 lower bound of inner integral, y ( a function of the inner
+     * integration variable x)
+     * @param bounds2 upper bound of inner integral, y ( a function of the inner
+     * integration variable x)
+     * @param fx the integrand f(x, params) where x = null, and params = {x,y}
+     * @param equationParams the {x,y}
+     * @return
+     */
     public static double gaussianDouble(double a, double b, int m, int n, FunctionModel bounds1, FunctionModel bounds2, FunctionModel fx, double[] equationParams) {
         double result = 0;
         double h1 = (b - a) / 2;
