@@ -17,7 +17,7 @@ import numutil.Polynomial;
  */
 public class hw05 {
 
-  static  double[] null_params = new double[]{};
+    static double[] null_params = new double[]{};
 
     static class Integrand implements FunctionModel {
 
@@ -29,6 +29,83 @@ public class hw05 {
         public double dcompute(int derivative, double input, double[] equationParams) {
             return Double.NaN;
         }
+    }
+
+    static class physicsfunc implements FunctionModel {
+
+        public double compute(double x, double[] equationParams) {
+            double y = equationParams[0];
+            double xp = equationParams[1];
+            double yp = equationParams[2];
+            double term1 = Math.pow(x - xp, 2);
+            double term2 = Math.pow(y - yp, 2);
+            double denom = Math.sqrt(term1 + term2);
+
+            return 1 / denom;
+        }
+
+        public double dcompute(int derivative, double input, double[] equationParams) {
+            return Double.NaN;
+        }
+    }
+
+    public static double compositeSimpson(double x1, double x2, double y1, double y2, int x_steps, int y_steps, final FunctionModel integrand, double[] params) {
+        double result = 0;
+        int n = x_steps;
+        int m = y_steps;
+        double h = (x2 - x1) / n;
+        double k = (y2 - y1) / m;
+        double[] inner_params = new double[8];
+        inner_params[0] = x1;
+        inner_params[1] = x2;
+        inner_params[2] = y1;
+        inner_params[3] = y2;
+        inner_params[4] = x_steps;
+        inner_params[5] = y_steps;
+        inner_params[6] = params[0]; //xp
+        inner_params[7] = params[1]; //yp
+
+        FunctionModel inner_integral = new FunctionModel() {
+            public double compute(double input, double[] params) {
+                double x = input;
+                double x1 = params[0];
+                double x2 = params[1];
+                double y1 = params[2];
+                double y2 = params[3];
+
+                double x_steps = params[4];
+                double y_steps = params[5];
+                double xp = params[6];
+                double yp = params[7];
+
+                double y3 = 0.5 * (y1 + y2);
+                double n = x_steps;
+                double m = y_steps;
+                double h = (x2 - x1) / n;
+                double k = (y2 - y1) / m;
+                double[] inner_params = new double[3];
+                inner_params[1] = xp;
+                inner_params[2] = yp;
+                inner_params[0] = y1;
+                double f1 = integrand.compute(input, inner_params);
+                inner_params[0] = y2;
+                double f2 = integrand.compute(input, inner_params);
+                inner_params[0] = y3;
+                double f3 = integrand.compute(input, inner_params);
+                double result = 0.5 * k * (f1 + f2 + 2 * f3);
+                return result;
+            }
+
+            public double dcompute(int derivative, double input, double[] equationParams) {
+                return Double.NaN;
+            }
+        };
+
+        result = AdaptiveQuadrature.aq2(x1, x2, inner_integral, inner_params, TOL, 100);
+
+
+
+        return result;
     }
     public static double TOL = 1e-5;
 
@@ -57,14 +134,23 @@ public class hw05 {
             blackbody();
         }
         if (true) { // exercise 4.22
-            doubleintegral();
+            doubleintegral2();
+        }
+    }
+
+    public static void doubleintegral2() {
+        for (int i =1;i <11; i++){
+        double[] params = new double[]{2*i,2*i};
+        FunctionModel pyfunc = new physicsfunc();
+        double result = compositeSimpson(-1, 1, -1, 1, 5, 5, pyfunc, params);
+           System.out.println(result);
         }
     }
 
     public static void doubleintegral() {
         FunctionModel y1 = new FunctionModel() {
             public double compute(double input, double[] equationParams) {
-                return Math.pow(input, 3);
+                return 0;
             }
 
             public double dcompute(int derivative, double input, double[] equationParams) {
@@ -73,7 +159,7 @@ public class hw05 {
         };
         FunctionModel y2 = new FunctionModel() {
             public double compute(double input, double[] equationParams) {
-                return Math.pow(input, 2);
+                return 1;
             }
 
             public double dcompute(int derivative, double input, double[] equationParams) {
@@ -82,14 +168,19 @@ public class hw05 {
         };
         FunctionModel integrand = new FunctionModel() {
             public double compute(double input, double[] params) {
-                return Math.exp(params[1] / params[0]);
+                double x = input;
+                double y1 = params[0];
+                double y2 = params[1];
+                double y3 = 0.5 * (y1 + y2);
+                return 4;
             }
 
             public double dcompute(int derivative, double input, double[] equationParams) {
                 return Double.NaN;
             }
         };
-        double integral =calculus.MultipleIntegral.simpsonsDouble(0.1, 0.5, 5, 5, y1, y2, integrand, null_params);
+        double integral = calculus.MultipleIntegral.simpsonsDouble(0, 1, 2, 2, y1, y2, integrand, null_params);
+        // I[I[4]] = 4
         System.out.println(integral);
     }
 
