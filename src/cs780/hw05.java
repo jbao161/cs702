@@ -9,6 +9,7 @@ import calculus.Integral;
 import function.FresnelC;
 import function.FresnelS;
 import function.FunctionModel;
+import java.util.Random;
 import numutil.Polynomial;
 
 /**
@@ -16,7 +17,7 @@ import numutil.Polynomial;
  * @author jbao
  */
 public class hw05 {
-
+    static int count =0;
     static double[] null_params = new double[]{};
 
     static class Integrand implements FunctionModel {
@@ -40,7 +41,7 @@ public class hw05 {
             double term1 = Math.pow(x - xp, 2);
             double term2 = Math.pow(y - yp, 2);
             double denom = Math.sqrt(term1 + term2);
-
+count++;
             return 1 / denom;
         }
 
@@ -86,13 +87,14 @@ public class hw05 {
                 double[] inner_params = new double[3];
                 inner_params[1] = xp;
                 inner_params[2] = yp;
+
                 inner_params[0] = y1;
                 double f1 = integrand.compute(input, inner_params);
                 inner_params[0] = y2;
                 double f2 = integrand.compute(input, inner_params);
                 inner_params[0] = y3;
                 double f3 = integrand.compute(input, inner_params);
-                double result = 0.5 * k * (f1 + f2 + 2 * f3);
+                double result = 0.25 * (x2-x1) * (f1 + f2 + 2 * f3);
                 return result;
             }
 
@@ -107,7 +109,7 @@ public class hw05 {
 
         return result;
     }
-    public static double TOL = 1e-5;
+    public static double TOL = 1e-15;
 
     public static void main(String[] args) {
 
@@ -120,12 +122,7 @@ public class hw05 {
             Integrand ig = new Integrand();
             double kterm = Integral.newtoncotes(false, 19, 0.0, Math.PI / 2, ig, equationParams);
             System.out.println(kterm);
-//            for (int i = 0; i < 5; i++) {
-//                kterm = ig.compute(i, equationParams);
-//                       System.out.println(kterm);
-//            }
-//            kterm = ig.compute(Math.PI/2-0.001, equationParams);
-//                       System.out.println(kterm);
+
         }
         if (false) { // exercise 4.12
             legendre();
@@ -133,17 +130,66 @@ public class hw05 {
         if (false) { // exercise 4.18
             blackbody();
         }
-        if (true) { // exercise 4.22
-            doubleintegral2();
+        if (false) { // exercise 4.22
+            doubleintegral2(); // simpson
+            montecarlo();
+            System.out.println(count);
         }
     }
 
+    public static void montecarlo() {
+        for (int i = 1; i < 11; i++) {
+            double x1 = -1;
+            double x2 = 1;
+            double y1 = -1;
+            double y2 = 1;
+            int num_points = 100;
+            double[] params = new double[]{2 * i, 2 * i};
+            FunctionModel pyfunc = new physicsfunc();
+            double result;
+            result = mc(x1, x2, y1, y2, num_points, pyfunc, params);
+            System.out.println(result);
+        }
+
+    }
+
+    public static double random(double min, double max) {
+
+        // Usually this can be a field rather than a method variable
+        Random rand = new Random();
+
+        // nextInt is normally exclusive of the top value,
+        // so add 1 to make it inclusive
+        double randomNum = rand.nextDouble() * (max - min) + min;
+
+        return randomNum;
+    }
+
+    public static double mc(double x1, double x2, double y1, double y2, int num_points, FunctionModel func, double[] params) { // monte carlo
+        double result;
+        double[] inner_params = new double[3];
+
+        inner_params[1] = params[0];
+        inner_params[2] = params[1];
+        result = 0;
+        for (int i = 0; i < num_points; i++) {
+            double x = random(x1, x2);
+            double y = random(y1, y2);
+            inner_params[0] = y;
+            double fxy = func.compute(x, inner_params);
+            result += fxy;
+        }
+        result *= (x2 - x1) * (y2 - y1) / num_points;
+
+        return result;
+    }
+
     public static void doubleintegral2() {
-        for (int i =1;i <11; i++){
-        double[] params = new double[]{2*i,2*i};
-        FunctionModel pyfunc = new physicsfunc();
-        double result = compositeSimpson(-1, 1, -1, 1, 5, 5, pyfunc, params);
-           System.out.println(result);
+        for (int i = 1; i < 11; i++) {
+            double[] params = new double[]{2 * i, 2 * i};
+            FunctionModel pyfunc = new physicsfunc();
+            double result = compositeSimpson(-1, 1, -1, 1, 5, 5, pyfunc, params);
+            System.out.println(result);
         }
     }
 

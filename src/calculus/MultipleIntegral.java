@@ -12,7 +12,7 @@ import numutil.LegendrePolynomial;
  * @author jbao
  */
 public class MultipleIntegral {
-public static double TOL = 1e-15;
+public static double TOL = 1e-8;
     public static double compositeSimpson(double x1, double x2, double y1, double y2, int xsteps, int ysteps, FunctionModel fx, double[] equationParams) {
 
         return Double.NaN;
