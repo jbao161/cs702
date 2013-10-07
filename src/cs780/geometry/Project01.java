@@ -4,17 +4,14 @@
  */
 package cs780.geometry;
 
-import function.FunctionModel;
 import function.MultiFunction;
 import numutil.Matrix;
-import solvermethods.MethodNewton;
-import solvermethods.SolverMethod;
 
 /**
  *
  * @author jbao
  */
-public class Project01_N4 {
+public class Project01 {
 
     static double alpha = 19.30;
     static double epsilon = 1.51;
@@ -86,7 +83,58 @@ public class Project01_N4 {
         return result;
     }
 
-   
+    public static double[][] minimize(double[][] atom_positions) {
+
+        /*
+         * do minimization here
+         */
+        int num_iterations = 100;
+
+        double pt = get_potential(atom_positions); // trying to get to -72.8229652614022
+
+        MultiFunction potential = new MultiFunction() {
+            public double compute(double[][] atom_positions) {
+                return get_potential(atom_positions);
+            }
+        };
+        int num_atoms = atom_positions.length;
+        for (int k = 0; k < num_iterations; k++) {
+            boolean good_enough = true;
+            for (int i = 0; i < num_atoms; i++) {
+                int num_coordinates = atom_positions[i].length;
+                for (int j = 0; j < num_coordinates; j++) {
+                    double x = atom_positions[i][j];
+                    double optimalx = MultiNewton.solve(i, j, atom_positions);
+                    atom_positions[i][j] = optimalx;
+                    if ( Math.abs(x - optimalx)>TOL){
+                        good_enough = false;
+                    }
+                }
+            }
+            if (good_enough) {
+                System.out.println("iterations: " + k);
+                break;
+            }
+        }
+        /*
+         * 
+         */
+        return atom_positions;
+    }
+
+    public static double get_minized_potential(double[][] atom_positions) {
+        double initial_potential = get_potential(atom_positions);
+        minimize(atom_positions);
+        double final_potential = get_potential(atom_positions);
+        Object[] result = new Object[3];
+        result[0] = initial_potential;
+        result[1] = final_potential;
+        result[2] = atom_positions;
+        //System.out.println(initial_potential + "," + final_potential + ",");
+        Matrix ap = new Matrix(atom_positions);
+        //ap.printdata();
+        return final_potential;
+    }
 
     public static void get_distances(double[][] atom_positions) {
         int num_atoms = atom_positions.length;

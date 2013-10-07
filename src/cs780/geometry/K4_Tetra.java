@@ -15,7 +15,7 @@ import solvermethods.SolverMethod;
  *
  * @author jbao
  */
-public class K4_Tetra extends Project01_N4 {
+public class K4_Tetra extends Project01 {
 
     static double[][] ap_stored;
 

@@ -15,7 +15,7 @@ import solvermethods.SolverMethod;
  *
  * @author jbao
  */
-public class K4_plane extends Project01_N4 {
+public class K4_plane extends Project01 {
 
     static FunctionModel ft = new FunctionModel() {
         public double compute(double x, double[] params) {
@@ -60,41 +60,31 @@ public class K4_plane extends Project01_N4 {
     }
 
     public static double[][] minimize(double[][] atom_positions) {
+
         /*
          * do minimization here
          */
-        SolverMethod newton = new MethodNewton();
         int num_iterations = 100;
+
         double pt = get_potential(atom_positions); // trying to get to -72.8229652614022
+
         MultiFunction potential = new MultiFunction() {
             public double compute(double[][] atom_positions) {
                 return get_potential(atom_positions);
             }
         };
         int num_atoms = atom_positions.length;
-
         for (int k = 0; k < num_iterations; k++) {
             boolean good_enough = true;
-
             for (int i = 0; i < num_atoms; i++) {
                 int num_coordinates = atom_positions[i].length;
-
                 for (int j = 0; j < num_coordinates; j++) {
-                    Object[] objects = new Object[3];
-                    objects[0] = ftd;
-                    double[] initial_guess = new double[1];
-                    initial_guess[0] = 1;
-                    objects[1] = initial_guess;
-                    objects[2] = new double[]{};
-                    double x = newton.solve(objects);
-                    double old_x = atom_positions[i][j];
-                    if (Math.abs(old_x - x) > TOL) {
+                    double x = atom_positions[i][j];
+                    double optimalx = MultiNewton.solve(i, j, atom_positions);
+                    //System.out.println(optimalx);
+                    atom_positions[i][j] = optimalx;
+                    if (Math.abs(x - optimalx) > TOL) {
                         good_enough = false;
-                    }
-                    atom_positions[i][j] = x;
-                    double next_pt = get_potential(atom_positions);
-                    if (next_pt > pt) {
-                        atom_positions[i][j] = old_x;
                     }
                 }
             }
@@ -148,6 +138,31 @@ public class K4_plane extends Project01_N4 {
 
     }
 
+    public static void findglobal2() {
+        double[][] ap = t4(6);
+        Matrix printer = new Matrix(ap);
+        printer.printdata();
+        minimize(ap);
+        printer = new Matrix(ap);
+        printer.printdata();
+        get_distances(ap);
+        System.out.println(get_potential(ap));
+    }
+
+    public static double findglobalsilent(double length) {
+        double[][] ap = t4(length);
+        minimize(ap);
+        return get_potential(ap);
+    }
+
+    public static double fgd(double length) {
+        double step = 0.1;
+        double fplus = findglobalsilent(length + step);
+        double fminus = findglobalsilent(length - step);
+        double deriv = 0.5 / step * (fplus - fminus);
+        return deriv;
+    }
+
     public static void manualsearch() {
         double[][] ap = t4(11);
         Matrix printer = new Matrix();
@@ -164,7 +179,8 @@ public class K4_plane extends Project01_N4 {
     }
 
     public static void main(String[] args) {
-        findglobal();
+        findglobal2();
         //manualsearch();
+       
     }
 }
