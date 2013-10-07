@@ -28,8 +28,8 @@ public class MethodFalsePosition extends SolverMethod {
         // some mild input checking
         boolean breakout = false;
         if (DEBUG) {
-            System.out.println("f(low guess) = " + fx0);
-            System.out.println("f(high guess) = " + fx1);
+            System.out.println("f("+x0+") = " + fx0);
+            System.out.println("f("+x1+") = " + fx1);
         }
         if (Double.isInfinite(fx0) || Double.isNaN(fx0)) {
             System.out.println("Invalid Input: " + x0 + ". f(low guess) is not a valid number!");

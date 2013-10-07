@@ -211,6 +211,25 @@ public class Matrix {
         Matrix result = new Matrix(c, true);
         return result;
     }
+        public Matrix subtract(Matrix matrix) {
+        int[] dimA = this.dim();
+        int[] dimB = matrix.dim();
+        if (dimA[0] != dimB[0] || dimA[1] != dimB[1]) {
+            throw new ArithmeticException("matrix dimensions do not agree: (" + dimA[0] + "x" + dimA[1] + "),(" + dimB[0] + "x" + dimB[1] + ") ");
+        }
+        int row = dimA[0];
+        int col = dimA[1];
+        double[][] a = this.array;
+        double[][] b = matrix.array;
+        double[][] c = new double[row][col];
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                c[i][j] = a[i][j] - b[i][j];
+            }
+        }
+        Matrix result = new Matrix(c, true);
+        return result;
+    }
 
     public Matrix multiply(double constant) {
         double[][] a = this.array;

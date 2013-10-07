@@ -11,7 +11,7 @@ package solvermethods;
 public abstract class SolverMethod {
 
     // tolerance and max iterations
-    public double TOL = 1e-15;
+    public double TOL = 5e-8;
     public double maxIter = 1e3;
 
     public abstract double solve(Object[] args);

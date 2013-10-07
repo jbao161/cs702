@@ -44,8 +44,8 @@ public class MethodBisection extends SolverMethod {
         // some mild input checking
         boolean breakout = false;
         if (DEBUG) {
-            System.out.println("f(low guess) = " + functionBot);
-            System.out.println("f(high guess) = " + functionTop);
+            System.out.println("f("+lowGuess+") = " + functionBot);
+            System.out.println("f("+highGuess+") = " + functionTop);
         }
         if (Double.isInfinite(functionBot) || Double.isNaN(functionBot)) {
             System.out.println("Invalid Input: " + functionBot + ". f(low guess) is not a valid number!");
