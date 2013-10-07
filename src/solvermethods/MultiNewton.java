@@ -22,11 +22,8 @@ public class MultiNewton extends SolverMethod {
      * @return
      */
     @Override
-    public double solve(Object[] args) {
+    public double solve(MultiFunction function, int var_index, double step_size, double[][] atom_positions) {
 
-        MultiFunction function = (MultiFunction) args[0];
-        int var_index = (Integer) args[1];
-        double step_size = (Double) args[2];
         double[] init_variables = (double[]) args[3];
         double initialGuess = init_variables[var_index];
         double[] equationParams = (double[]) args[4];
@@ -38,7 +35,7 @@ public class MultiNewton extends SolverMethod {
 
         for (int i = 0; i <= maxIter; i++) { // i<= maxIter because results of nth iteration are not checked until the n+1th
 
-            fx = function.compute(init_variables, equationParams);
+            fx = function.compute(dou);
             if (fx == 0 || convergenceCriterion < TOL) { // NaN < TOL == false
                 return initialGuess;
             }
