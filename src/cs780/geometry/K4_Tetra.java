@@ -4,12 +4,11 @@
  */
 package cs780.geometry;
 
-import function.FunctionModel;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import numutil.Matrix;
-import solvermethods.MethodBisection;
-import solvermethods.MethodFalsePosition;
-import solvermethods.MethodNewton;
-import solvermethods.SolverMethod;
 
 /**
  *
@@ -17,71 +16,81 @@ import solvermethods.SolverMethod;
  */
 public class K4_Tetra extends Project01 {
 
-    static double[][] ap_stored;
+    public static double[][] k7(double L) {
 
-    public static double[][] t4(double L) {
-        double[][] atom_positions = new double[][]{
+         double[][] atom_positions = new double[][]{
             {L, 0, -Math.sqrt(2) * 0.5 * L},
             {-L, 0, -Math.sqrt(2) * 0.5 * L},
             {0, L, Math.sqrt(2) * 0.5 * L},
             {0, -L, Math.sqrt(2) * 0.5 * L}
         };
+
         return atom_positions;
     }
 
-    public static double t4potential(double L) {
-        double potential = 0;
-        double[][] atom_positions = t4(L);
-        potential = get_minized_potential(atom_positions);
-        //Matrix printer = new Matrix(atom_positions);
-        //printer.print();
-        //get_distances(atom_positions);
-        return potential;
+    public static void testgeometry(double n) {
+        double[][] ap = k7(n);
+        Matrix printer;
+        printer = new Matrix(ap);
+        printer.printdata();
+        Project01.get_distances(ap);
     }
 
-  
+    public static void testminimize(double n) {
+        double[][] ap = k7(n);
+        minimize(ap);
+        Matrix printer;
+        printer = new Matrix(ap);
+        printer.printdata();
+        Project01.get_distances(ap);
+        System.out.println(get_potential(ap));
+    }
+
+    public static void to_file(String filename, double[][] atom_positions) {
+        int num_atoms = atom_positions.length;
+        try {
+
+            String content = num_atoms+"\r\nK7 partial\r\n";
+
+            File file = new File("/users/jbao/" + filename + ".xyz");
+
+            // if file doesnt exists, then create it
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file.getAbsoluteFile());
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(content);
+            for (int i = 0; i < num_atoms; i++) {
+                int num_coordinates = atom_positions[i].length;
+                bw.write("K ");
+                for (int j = 0; j < num_coordinates; j++) {
+                    bw.write(atom_positions[i][j] + " ");
+                }
+                bw.write("\r\n");
+            }
+            bw.close();
+
+            System.out.println("Done");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void xyz(double n) {
+        double[][] ap = k7(n);
+        to_file("k7 initial", ap);
+        minimize(ap);
+        to_file("k7 optimal", ap);
+
+    }
 
     public static void main(String[] args) {
-        // double u = t4potential(5.1);
-        // System.out.println(u);
-        FunctionModel ft = new FunctionModel() {
-            public double compute(double x, double[] params) {
-                return t4potential(x);
-            }
-
-            public double dcompute(int n, double x, double[] params) {
-                return Double.NaN;
-            }
-        };
-        FunctionModel ftd = new FunctionModel() {
-            public double compute(double x, double[] params) {
-                double step = 0.01;
-                return 0.5 * (t4potential(x + step) - t4potential(x - step));
-            }
-
-            public double dcompute(int n, double x, double[] params) {
-                double step = 0.01;
-                return 0.5 * (compute(x + step, null) - compute(x - step, null));
-            }
-        };
-//        numutil.Plot.plotdata(ft, null, 0.1, 14.4, 14.6, true);
-//          u = t4potential(14.5);
-        SolverMethod mt = new MethodFalsePosition();
-        Object[] arg2 = new Object[3];
-        arg2[0] = ftd;
-        arg2[1] = new double[]{2, 6};
-        arg2[2] = null;
-        double min = mt.solve(arg2);
-        //System.out.println(min); // 27.352040468015804
-//        //f(27.352040468015804) = 0.02284208496971729
-        double minpotential = t4potential(min);
-        //System.out.println(minpotential); //-72.3027274383776
-        System.out.println(ft.compute(min, null));
-        double[][] coords = t4(min);
-        coords = minimize(coords);
-        Matrix printer = new Matrix(coords);
-        printer.printdata();
-
-        get_distances(coords);
+        double n = 4;
+        testgeometry(n);
+        testminimize(n);
+        xyz(n);
     }
 }

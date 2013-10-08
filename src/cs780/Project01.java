@@ -446,9 +446,9 @@ public class Project01 {
         //equilateral();
         //test_getpotential();
         //test_multideriv(); // trying to get to -72.8229652614022
-        //n3();
+        n3();
         //multimethod();
-        min_n3();
+        //min_n3();
     }
     // junk code:
     /*

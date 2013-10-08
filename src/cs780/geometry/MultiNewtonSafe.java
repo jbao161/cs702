@@ -8,10 +8,10 @@ package cs780.geometry;
  *
  * @author jbao
  */
-public class MultiNewton {
+public class MultiNewtonSafe {
 
     static int maxIter = 1000;
-    static double TOL = 5e-5;
+    static double TOL = 5e-6;
 
     public static double solve(int atom_index, int coord_index, double[][] atom_positions) {
         int ii = atom_index;
@@ -40,6 +40,9 @@ public class MultiNewton {
             nextGuess = initialGuess - fx / derivative;
 
             convergenceCriterion = Math.abs(nextGuess - initialGuess) / Math.abs(initialGuess);
+            if (Math.abs(nextGuess - initialGuess) > 10 ){
+                return initialGuess;
+            }
             initialGuess = nextGuess;
             atom_positions[ii][jj] = initialGuess;
         }

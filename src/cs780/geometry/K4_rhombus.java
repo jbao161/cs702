@@ -14,19 +14,15 @@ import numutil.Matrix;
  *
  * @author jbao
  */
-public class K5_diamond extends Project01 {
+public class K4_rhombus extends Project01 {
 
     public static double[][] k7(double L) {
 
-
-     double A = Math.sqrt(3) / 3 * L;
-        double B = Math.sqrt(6) / 3 * L;
-        double[][] atom_positions = new double[][]{
-            {0, 0, -B},
-            {A, 0, 0},
-            {-0.5 * A, 0.5 * L, 0},
-            {-0.5 * A, -0.5 * L, 0},
-            {0, 0, B}
+         double[][] atom_positions = new double[][]{
+            {0, 0, 0},
+            {L, 0, 0},
+            {L * (1 + 1 / Math.sqrt(2)), L / Math.sqrt(2), 0},
+            {L / Math.sqrt(2), L / Math.sqrt(2), 0}
         };
         return atom_positions;
     }
@@ -91,7 +87,7 @@ public class K5_diamond extends Project01 {
     }
 
     public static void main(String[] args) {
-        double n = 8;
+        double n = 4;
         testgeometry(n);
         testminimize(n);
         xyz(n);

@@ -11,14 +11,14 @@ import numutil.Matrix;
  *
  * @author jbao
  */
-public class Project01 {
+public class Project01safe {
 
     static double alpha = 19.30;
     static double epsilon = 1.51;
     static double p = 10.58;
     static double q = 1.34;
     static double r_0 = 8.253;
-    static double step_size = 0.01; // in the xyz coordianate for computing derivatives
+    static double step_size = 0.001; // in the xyz coordianate for computing derivatives
     static double TOL = 0.0005;
 
     public static double get_distance(double[] position1, double[] position2) {
@@ -104,7 +104,7 @@ public class Project01 {
                 int num_coordinates = atom_positions[i].length;
                 for (int j = 0; j < num_coordinates; j++) {
                     double x = atom_positions[i][j];
-                    double optimalx = MultiNewton.solve(i, j, atom_positions);
+                    double optimalx = MultiNewtonSafe.solve(i, j, atom_positions);
                     atom_positions[i][j] = optimalx;
                     if ( Math.abs(x - optimalx)>TOL){
                         good_enough = false;

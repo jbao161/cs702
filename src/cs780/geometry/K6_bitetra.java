@@ -14,21 +14,21 @@ import numutil.Matrix;
  *
  * @author jbao
  */
-public class K5_diamond extends Project01 {
+public class K6_bitetra extends Project01safe {
 
     public static double[][] k7(double L) {
 
-
-     double A = Math.sqrt(3) / 3 * L;
-        double B = Math.sqrt(6) / 3 * L;
         double[][] atom_positions = new double[][]{
-            {0, 0, -B},
-            {A, 0, 0},
-            {-0.5 * A, 0.5 * L, 0},
-            {-0.5 * A, -0.5 * L, 0},
-            {0, 0, B}
+            {17.8130778321, -10.9601743941, 2.7881524681},
+            {17.5337615754, -10.1721917375, -0.9293744309},
+            {16.9232057939, -7.4452755859, 1.6344147911},
+            {19.9529725524, -5.1980600189, 2.0248002665},
+            {19.2800989876, -7.9438370302, 4.5795781929},
+            {20.4623095148, -8.8338221587, 1.0741821748}
         };
-        return atom_positions;
+        Matrix apm = new Matrix(atom_positions);
+
+        return apm.multiply(L).array;
     }
 
     public static void testgeometry(double n) {
@@ -53,7 +53,7 @@ public class K5_diamond extends Project01 {
         int num_atoms = atom_positions.length;
         try {
 
-            String content = num_atoms+"\r\nK7 partial\r\n";
+            String content = num_atoms + "\r\nK7 partial\r\n";
 
             File file = new File("/users/jbao/" + filename + ".xyz");
 
@@ -91,7 +91,7 @@ public class K5_diamond extends Project01 {
     }
 
     public static void main(String[] args) {
-        double n = 8;
+        double n = 2.24;
         testgeometry(n);
         testminimize(n);
         xyz(n);
