@@ -14,7 +14,11 @@ import numutil.Matrix;
  * see ga() method for the actual code. the useful methods are get_rij for the
  * distances, get_potential for the Lennard-Jones potential, generate_cluster
  * for initial random seeding, sort, splice, crossover, and mutate. the rest of
- * the methods and tests aren't used at all in the ga() method. 
+ * the methods and tests aren't used at all in the ga() method.
+ *
+ * some of the utility method calls rely on the NumericalAnalysis project. these
+ * are mostly for copying arrays, finding max/min of an array, printing the
+ * arrays to screen and can be replaced/deleted.
  *
  * @author jbao
  */
