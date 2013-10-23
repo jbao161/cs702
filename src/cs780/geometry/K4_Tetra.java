@@ -90,7 +90,12 @@ public class K4_Tetra extends Project01 {
     public static void main(String[] args) {
         double n = 4;
         testgeometry(n);
+       long startTime = System.nanoTime();
         testminimize(n);
+        long endTime = System.nanoTime();
+
+        double duration = (endTime - startTime)*1E-6;
+        System.out.println("duration (ms): "+duration);
         xyz(n);
     }
 }

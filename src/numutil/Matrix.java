@@ -177,6 +177,18 @@ public class Matrix {
             System.out.println(entry);
         }
     }
+     public void print_plain() {
+        int[] dim = dim();
+        String entry;
+        System.out.println(dim[0] + "x" + dim[1] + " matrix");
+        for (int i = 0; i < dim[0]; i++) {
+            entry = "";
+            for (int j = 0; j < dim[1]; j++) {
+                entry += array[i][j] + "    ";
+            }
+            System.out.println(entry);
+        }
+    }
 
     public Matrix add(double constant) {
         double[][] b = this.array;

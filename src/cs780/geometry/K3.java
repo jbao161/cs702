@@ -50,7 +50,7 @@ public class K3 extends Project01 {
         int num_atoms = atom_positions.length;
         try {
 
-            String content = num_atoms+"\r\nK7 partial\r\n";
+            String content = num_atoms + "\r\nK7 partial\r\n";
 
             File file = new File("/users/jbao/" + filename + ".xyz");
 
@@ -90,7 +90,12 @@ public class K3 extends Project01 {
     public static void main(String[] args) {
         double n = 6;
         testgeometry(n);
+        long startTime = System.nanoTime();
         testminimize(n);
+        long endTime = System.nanoTime();
+
+        double duration = (endTime - startTime)*1E-6;
+        System.out.println("duration (ms): "+duration);
         xyz(n);
     }
 }

@@ -4,7 +4,6 @@
  */
 package numutil;
 
-import java.lang.ArithmeticException;
 import java.util.Arrays;
 
 /**
@@ -13,10 +12,18 @@ import java.util.Arrays;
  */
 public class MathTools {
 
-    public static double[] Copy(double[] array) {
+    public static double[] copy(double[] array) {
         double[] result = new double[array.length];
         for (int i = 0; i < array.length; i++) {
             result[i] = array[i];
+        }
+        return result;
+    }
+
+    public static double[][] copy(double[][] array) {
+        double[][] result = new double[array.length][];
+        for (int i = 0; i < array.length; i++) {
+            result[i] = copy(array[i]);
         }
         return result;
     }
@@ -58,11 +65,31 @@ public class MathTools {
         return result;
     }
 
+    public static double min(double[] data) {
+        double result = Double.MAX_VALUE;
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] < result) {
+                result = data[i];
+            }
+        }
+        return result;
+    }
+
     public static double min(double[][] data) {
         double result = Double.MAX_VALUE;
         for (int i = 0; i < data.length; i++) {
             if (data[i][0] < result) {
                 result = data[i][0];
+            }
+        }
+        return result;
+    }
+
+    public static double max(double[] data) {
+        double result = data[0];
+        for (int i = 0; i < data.length; i++) {
+            if (data[i] > result) {
+                result = data[i];
             }
         }
         return result;
@@ -148,10 +175,34 @@ public class MathTools {
         System.out.println(str_out);
     }
 
+    public static void print_plain(double[][] array) {
+        for (int k = 0; k < array.length; k++) {
+            String str_out = "";
+            for (int i = 0; i < array[k].length; i++) {
+                str_out += array[k][i] + "  ";
+            }
+            System.out.println(str_out);
+        }
+    }
+
     public static void printelements(double[] array) {
         for (int i = 0; i < array.length; i++) {
             System.out.println(array[i]);
         };
+    }
+
+    public static void print(double[][][] array) {
+        int num_elements = array.length;
+        Matrix printer = new Matrix();
+        for (int i = 0; i < num_elements; i++) {
+            printer.array = array[i];
+            printer.print();
+        }
+    }
+
+    public static void print(double[][] array) {
+        Matrix printer = new Matrix(array);
+        printer.print();
     }
 
     public static double[] trim(double[][] array) {

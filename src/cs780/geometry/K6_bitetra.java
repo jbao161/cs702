@@ -93,7 +93,12 @@ public class K6_bitetra extends Project01safe {
     public static void main(String[] args) {
         double n = 2.24;
         testgeometry(n);
+           long startTime = System.nanoTime();
         testminimize(n);
+        long endTime = System.nanoTime();
+
+        double duration = (endTime - startTime)*1E-6;
+        System.out.println("duration (ms): "+duration);
         xyz(n);
     }
 }

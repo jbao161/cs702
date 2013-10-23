@@ -93,7 +93,12 @@ public class K7_penta extends Project01 {
     public static void main(String[] args) {
         int n = 6;
         testgeometry(n);
+      long startTime = System.nanoTime();
         testminimize(n);
+        long endTime = System.nanoTime();
+
+        double duration = (endTime - startTime)*1E-6;
+        System.out.println("duration (ms): "+duration);
          xyz(n);
     }
 }

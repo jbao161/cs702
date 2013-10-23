@@ -178,8 +178,8 @@ public class hw04 {
         double sse_p, sse_m, sse;
         sse = LSE(curve, params, data);
         sse_m = sse;
-        double[] prev_params = numutil.MathTools.Copy(params);
-        double[] next_params = numutil.MathTools.Copy(params);
+        double[] prev_params = numutil.MathTools.copy(params);
+        double[] next_params = numutil.MathTools.copy(params);
         for (int j = 0; j < max_iter; j++) {
 
             // for each parameter find its next estimate
@@ -213,7 +213,7 @@ public class hw04 {
                 return next_params;
             }
             System.out.println(Arrays.toString(next_params));
-            prev_params = numutil.MathTools.Copy(next_params);
+            prev_params = numutil.MathTools.copy(next_params);
         }
         return null;
     }

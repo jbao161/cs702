@@ -136,7 +136,7 @@ public class LM {
             data_y = data[i][1];
             residual = Math.abs(data_y - function.compute(data_x, params));
             for (int j = 0; j < num_params; j++) {
-                double[] dx = numutil.MathTools.Copy(params);
+                double[] dx = numutil.MathTools.copy(params);
                 dx[j] += params[j] * step_size;
                 residual_p = Math.abs(data_y - function.compute(data_x, dx));
                 diff_y = residual - residual_p; // positive direction is towards minimizing residual
