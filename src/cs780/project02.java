@@ -9,6 +9,12 @@ import java.util.Random;
 import numutil.Matrix;
 
 /**
+ * Genetic Algorithm for optimizing geometry of atomic clusters
+ *
+ * see ga() method for the actual code. the useful methods are get_rij for the
+ * distances, get_potential for the Lennard-Jones potential, generate_cluster
+ * for initial random seeding, sort, splice, crossover, and mutate. the rest of
+ * the methods and tests aren't used at all in the ga() method. 
  *
  * @author jbao
  */
@@ -29,10 +35,11 @@ public class project02 {
         return rij;
     }
 
-    public static double get_potential2(double[][] atoms){
-       return Project01.get_potential(atoms);
+    public static double get_potential2(double[][] atoms) {
+        return Project01.get_potential(atoms);
     }
-    public static double get_potential (double[][] atoms) {
+
+    public static double get_potential(double[][] atoms) {
         double potential = 0;
         int num_atoms = atoms.length;
         double sum_forces;
@@ -80,6 +87,14 @@ public class project02 {
         }
     }
 
+    /**
+     * performs a single point crossover halfway along the chromosome, at the
+     * nearest atom rounded down. warning: changes the input arrays, so make a
+     * copy before using if you want to keep the original!
+     *
+     * @param parent1
+     * @param parent2
+     */
     public static void splice(double[][] parent1, double[][] parent2) {
         double[] swap;
         int num_atoms = parent1.length;
@@ -91,14 +106,21 @@ public class project02 {
         }
     }
 
+    /**
+     * makes a single point crossover at a randomly selected atom, with a
+     * probability equal to the crossover rate
+     *
+     * @param parent1
+     * @param parent2
+     */
     static void crossover(double[][] parent1, double[][] parent2) {
         double skip = rand.nextDouble();
-        if (skip > crossover_rate) {
+        if (skip > crossover_rate) { // chance of crossover = crossover_rate
             return;
         }
         double[] swap;
         int num_atoms = parent1.length;
-        int splice_location = 1 + rand.nextInt(num_atoms - 1);
+        int splice_location = 1 + rand.nextInt(num_atoms - 1); // pick a crossover point at a random atom
         for (int i = 0; i < splice_location; i++) {
             swap = parent1[i];
             parent1[i] = parent2[i];
@@ -106,6 +128,13 @@ public class project02 {
         }
     }
 
+    /**
+     * each gene (x,y,or z coordinate) has a small chance of changing into a
+     * random value
+     *
+     * @param parent
+     * @return
+     */
     static int mutate(double[][] parent) {
         int count = 0;
         for (int i = 0; i < parent.length; i++) {
@@ -509,10 +538,10 @@ public class project02 {
 
     static void ga() {
         grid_size = 3;
-        population_size = 300;
+        population_size = 100;
         int num_generations = 10000;
         int num_atoms = 13;
-        double seed_potential = -2;
+        double seed_potential = -2; // highest potential allowed for initial seeding
 
         double max_potential;
         double min_potential;
@@ -539,7 +568,7 @@ public class project02 {
         // reorder the individuals by fitness
         sort(population, fitness);
         System.out.println("initial seed complete");
-        // create generations
+        // iterate over generations
         for (int k = 0; k < num_generations; k++) {
             // get the potentials for each cluster individual
             for (int i = 0; i < population_size; i++) {
@@ -559,9 +588,9 @@ public class project02 {
                 total_fitness += fitness[i];
             }
 
-            // trend of fittest member of population
+            // display trend of fittest member of population
             if (k % (num_generations / 10) == 0) { // show ten snapshots
-               // numutil.MathTools.print_plain(population[0]);
+                // numutil.MathTools.print_plain(population[0]);
                 System.out.println(min_potential);
                 System.out.println(max_potential);
             }
@@ -576,34 +605,38 @@ public class project02 {
             splice(parentA, parentB);
             population[population_size - 1] = parentB;
             population[population_size - 2] = parentA;
-            // mate everybody
+            // mate using selection for everybody except lowest rated individual
+            // (first individual j=0 is A the fittest, he's left untouched)
+            // (the last two individuals are the offspring of A and B)
             for (int j = 1; j < population_size - 2; j++) {
                 double potential = 1;
                 double[][] parent1 = population[j];
-                while (potential > 0) {
-                    double selection1 = rand.nextDouble() * total_fitness;
+                while (potential > 0) { // don't let the offspring have positive potential
+                    double selection1 = rand.nextDouble() * total_fitness; // pick a random point on the interval from zero to total fitness
                     double find_choice = 0;
-                    int p1 = 0;
+                    int mate1 = 0;
+                    // now see which indivdual that random point maps to by adding individual fitness ratings until the interval that individual is assigned to brackets the random point
                     for (int i = 0; i < fitness.length; i++) {
                         find_choice += fitness[i];
                         if (selection1 > find_choice) {
-                            p1 = i;
+                            mate1 = i; // identified the individual chosen for mating
                         }
                     }
                     double selection2 = selection1;
-                    while(selection2 == selection1){
+                    while (selection2 == selection1) { // don't pick the same individual to be its mating partner
                         selection2 = rand.nextDouble() * total_fitness;
                     }
+                    // repeat the random point mapping as in the first selection for the second mating individual
                     find_choice = 0;
-                    int p2 = 0;
+                    int mate2 = 0;
                     for (int i = 0; i < fitness.length; i++) {
                         find_choice += fitness[i];
                         if (selection2 > find_choice) {
-                            p2 = i;
+                            mate2 = i;
                         }
                     }
-                    parent1 = numutil.MathTools.copy(population[p1]);
-                    double[][] parent2 = numutil.MathTools.copy(population[p2]);
+                    parent1 = numutil.MathTools.copy(population[mate1]);
+                    double[][] parent2 = numutil.MathTools.copy(population[mate2]);
                     crossover(parent1, parent2);
                     mutate(parent1);
                     potential = get_potential(parent1);
