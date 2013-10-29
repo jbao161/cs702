@@ -17,7 +17,8 @@ import numutil.Polynomial;
  * @author jbao
  */
 public class hw05 {
-    static int count =0;
+
+    static int count = 0;
     static double[] null_params = new double[]{};
 
     static class Integrand implements FunctionModel {
@@ -41,7 +42,7 @@ public class hw05 {
             double term1 = Math.pow(x - xp, 2);
             double term2 = Math.pow(y - yp, 2);
             double denom = Math.sqrt(term1 + term2);
-count++;
+            count++;
             return 1 / denom;
         }
 
@@ -94,7 +95,7 @@ count++;
                 double f2 = integrand.compute(input, inner_params);
                 inner_params[0] = y3;
                 double f3 = integrand.compute(input, inner_params);
-                double result = 0.25 * (x2-x1) * (f1 + f2 + 2 * f3);
+                double result = 0.25 * (x2 - x1) * (f1 + f2 + 2 * f3);
                 return result;
             }
 
@@ -109,19 +110,19 @@ count++;
 
         return result;
     }
-    public static double TOL = 1e-15;
+    public static double TOL = 1e-5;
 
     public static void main(String[] args) {
 
         if (false) {// exercise 4.4
             fresnel();
         }
-        if (false) { // exercise 4.6
+        if (true) { // exercise 4.6
             pendulum();
             double[] equationParams = new double[]{1.0, 1.0, 1.0};
             Integrand ig = new Integrand();
-            double kterm = Integral.newtoncotes(false, 19, 0.0, Math.PI / 2, ig, equationParams);
-            System.out.println(kterm);
+            //double kterm = Integral.newtoncotes(false, 19, 0.0, Math.PI / 2, ig, equationParams);
+            //System.out.println(kterm);
 
         }
         if (false) { // exercise 4.12
@@ -380,10 +381,21 @@ count++;
                 double length = equationParams[1];
                 double gravity = equationParams[2];
                 Integrand integrate_me = new Integrand();
+                Integrand integrate_singularity = new Integrand() {
+                    public double compute(double x, double[] equationParams) {
+                        double k = equationParams[0];
+                        return Math.sqrt(1 - Math.pow(k, 2) * Math.pow(Math.sin(x), 2));
+                    }
+
+                    public double dcompute(int derivative, double input, double[] equationParams) {
+                        return Double.NaN;
+                    }
+                };
                 double kterm = AdaptiveQuadrature.aq2(start, end, integrate_me, equationParams, TOL, 10000);
+                kterm += AdaptiveQuadrature.aq2(0, 1/end, integrate_me, equationParams, TOL, 10000);
                 double deriv = (integrate_me.compute(Math.PI * 0.49, equationParams) - integrate_me.compute(Math.PI * 0.40 - 0.01, equationParams));
                 kterm += deriv;
-                System.out.println(kterm);
+                //System.out.println(kterm);
                 kterm = 1;
                 result = 4 * Math.sqrt(length / gravity) * kterm * Math.sin(theta / 2);
                 return result;
@@ -393,10 +405,13 @@ count++;
                 return Double.NaN;
             }
         };
-        double[] period_params = {1, 1, 10};
-        double period = period_function.compute(Math.PI / 2, period_params);
-        System.out.println(period);
+        double[] period_params = {1, 1, 9.8};
+        double increment = Math.PI / 100;
+        for (double i = 0; i < Math.PI; i += increment) {
+            double period = period_function.compute(i, period_params);
 
+            System.out.println(period);
+        }
 
     }
 

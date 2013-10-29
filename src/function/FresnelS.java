@@ -52,12 +52,14 @@ public class FresnelS implements FunctionModel {
         int max_subdivision = 1000;
         FunctionModel sh = new sinhelper();
         double result = AdaptiveQuadrature.aq2(0.0, input, sh, equationParams, TOL, max_subdivision);
-        //System.out.println(result);
+        System.out.println(result);
         return result;
     }
 
     public static void main(String[] args) {
         FresnelS fs = new FresnelS();
-        fs.compute(2, new double[]{});
+        for (double i = 0; i < 6; i += 0.1) {
+            fs.compute(i, new double[]{});
+        }
     }
 }
