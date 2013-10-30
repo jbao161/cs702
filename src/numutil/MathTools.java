@@ -170,7 +170,7 @@ public class MathTools {
     public static void printdata(double[] array) {
         String str_out = "";
         for (int i = 0; i < array.length; i++) {
-            str_out += array[i] + ",";
+            str_out += array[i] + " ";
         }
         System.out.println(str_out);
     }
