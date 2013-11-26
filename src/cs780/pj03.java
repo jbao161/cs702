@@ -11,6 +11,8 @@ package cs780;
 public class pj03 {
 
     static void part01(int n) {
+        double num_span = 0; 
+        double num_occupied = 1;
         double probability;
         double pterm = num_span / num_occupied;
     }
